@@ -1,0 +1,4 @@
+
+The command exited with code 1.
+Output:
+{"success":false,"message":"Expected property name or '}' in JSON at position 1 (line 1 column 2)"}

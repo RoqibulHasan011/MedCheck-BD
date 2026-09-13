@@ -1,0 +1,19 @@
+The following changes were made by the replace_file_content tool to: C:\Users\User\.gemini\antigravity\scratch\medcheck-bd\client\index.html. If relevant, proactively run terminal commands to execute this code for the USER. Don't ask for permission.
+[diff_block_start]
+@@ -326,6 +326,13 @@
+   <!-- Global Scripts -->
+   <script src="js/main.js"></script>
+   <script src="js/auth.js"></script>
++  <script>
++    document.addEventListener('DOMContentLoaded', () => {
++      setupMedicineAutocomplete('heroSearchInput', (name) => {
++        window.location.href = `verify.html?query=${encodeURIComponent(name)}`;
++      });
++    });
++  </script>
+ </body>
+ </html>
+ 
+[diff_block_end]
+
+Please note that the above snippet only shows the MODIFIED lines from the last change. It shows up to 3 lines of unchanged lines before and after the modified lines. The actual file contents may have many more lines not shown.

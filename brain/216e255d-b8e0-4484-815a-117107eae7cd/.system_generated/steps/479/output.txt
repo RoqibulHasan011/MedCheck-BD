@@ -1,0 +1,81 @@
+
+The command exited with code 0.
+Output:
+Login: true
+History PURCHASE: {
+  success: true,
+  count: 1,
+  data: [
+    {
+      _id: '6aa30aee2b2ebf79d0106715',
+      customerId: '6aa30aed2b2ebf79d0105f75',
+      medicineId: [Object],
+      medicineName: 'Seclo 20 mg',
+      genericName: 'Omeprazole',
+      manufacturer: 'Square Pharmaceuticals PLC',
+      batchNumber: 'SEC-2026-01',
+      verificationStatus: 'PURCHASED',
+      pharmacyId: [Object],
+      pharmacyName: 'MedCare Pharmacy Dhanmondi',
+      type: 'PURCHASE',
+      notes: 'Purchased with digital receipt MC-2026-784102',
+      checkedAt: '2026-09-08T19:54:22.329Z',
+      __v: 0
+    }
+  ]
+}
+History ALL: {
+  success: true,
+  count: 3,
+  data: [
+    {
+      _id: '6aa30aee2b2ebf79d0106716',
+      customerId: '6aa30aed2b2ebf79d0105f75',
+      medicineId: [Object],
+      medicineName: 'Maxpro 20 mg',
+      genericName: 'Esomeprazole',
+      manufacturer: 'Renata Limited',
+      batchNumber: 'MAX-2026-01',
+      verificationStatus: 'DATABASE MATCH',
+      pharmacyId: null,
+      pharmacyName: '',
+      type: 'VERIFICATION',
+      notes: '',
+      checkedAt: '2026-09-10T07:54:22.329Z',
+      __v: 0
+    },
+    {
+      _id: '6aa30aee2b2ebf79d0106714',
+      customerId: '6aa30aed2b2ebf79d0105f75',
+      medicineId: [Object],
+      medicineName: 'Napa 500 mg',
+      genericName: 'Paracetamol',
+      manufacturer: 'Beximco Pharmaceuticals Ltd.',
+      batchNumber: 'NAPA-2026-01',
+      verificationStatus: 'DATABASE MATCH',
+      pharmacyId: [Object],
+      pharmacyName: 'MedCare Pharmacy Dhanmondi',
+      type: 'VERIFICATION',
+      notes: '',
+      checkedAt: '2026-09-08T19:54:22.329Z',
+      __v: 0
+    },
+    {
+      _id: '6aa30aee2b2ebf79d0106715',
+      customerId: '6aa30aed2b2ebf79d0105f75',
+      medicineId: [Object],
+      medicineName: 'Seclo 20 mg',
+      genericName: 'Omeprazole',
+      manufacturer: 'Square Pharmaceuticals PLC',
+      batchNumber: 'SEC-2026-01',
+      verificationStatus: 'PURCHASED',
+      pharmacyId: [Object],
+      pharmacyName: 'MedCare Pharmacy Dhanmondi',
+      type: 'PURCHASE',
+      notes: 'Purchased with digital receipt MC-2026-784102',
+      checkedAt: '2026-09-08T19:54:22.329Z',
+      __v: 0
+    }
+  ]
+}
+

@@ -1,0 +1,103 @@
+The following changes were made by the replace_file_content tool to: C:\Users\User\.gemini\antigravity\scratch\medcheck-bd\server\routes\verify.js. If relevant, proactively run terminal commands to execute this code for the USER. Don't ask for permission.
+[diff_block_start]
+@@ -22,10 +22,10 @@
+ 
+     // 1. Check if the query itself matches a Batch number directly
+     let batchMatch = await Batch.findOne({
+-      batchNumber: { $regex: `^${rawQuery}$`, $options: 'i' },
++      batchNumber: { $regex: `^${rawQuery.trim()}$`, $options: 'i' },
+     }).populate('medicineId');
+ 
+-    // 2. Search for matching medicine by name, generic, regNumber, barcode, manufacturer
++    // 2. Search for matching medicine by direct regex
+     let medicine = null;
+     if (batchMatch && batchMatch.medicineId) {
+       medicine = batchMatch.medicineId;
+@@ -32,13 +32,41 @@
++      const cleanRegex = rawQuery.replace(/[^\w\s]/gi, '');
+       medicine = await Medicine.findOne({
+         $or: [
+-          { name: { $regex: `^${rawQuery}$`, $options: 'i' } },
+-          { name: { $regex: rawQuery, $options: 'i' } },
+-          { genericName: { $regex: rawQuery, $options: 'i' } },
+-          { registrationNumber: { $regex: `^${rawQuery}$`, $options: 'i' } },
+-          { barcode: { $regex: `^${rawQuery}$`, $options: 'i' } },
+-          { manufacturer: { $regex: rawQuery, $options: 'i' } },
++          { name: { $regex: `^${rawQuery.trim()}$`, $options: 'i' } },
++          { name: { $regex: cleanRegex, $options: 'i' } },
++          { genericName: { $regex: cleanRegex, $options: 'i' } },
++          { registrationNumber: { $regex: `^${rawQuery.trim()}$`, $options: 'i' } },
++          { barcode: { $regex: `^${rawQuery.trim()}$`, $options: 'i' } },
++          { manufacturer: { $regex: cleanRegex, $options: 'i' } },
+         ],
+       });
++
++      // If direct match failed, try smart tokenized search (e.g. "napa 500mg" or "napa500")
++      if (!medicine) {
++        const tokens = rawQuery
++          .replace(/[^\w\s]/gi, ' ')
++          .split(/\s+/)
++          .map((t) => t.replace(/(mg|ml|gm|mcg|iu)$/i, ''))
++          .filter((t) => t.length > 0);
++
++        if (tokens.length > 0) {
++          const tokenRegexes = tokens.map((t) => new RegExp(t, 'i'));
++
++          // Try matching all tokens in name, generic, strength or manufacturer
++          medicine = await Medicine.findOne({
++            $and: tokenRegexes.map((r) => ({
++              $or: [{ name: r }, { genericName: r }, { strength: r }, { manufacturer: r }],
++            })),
++          });
++
++          // If still not matched, try matching the first significant brand token
++          if (!medicine && tokens[0].length >= 3) {
++            medicine = await Medicine.findOne({
++              $or: [{ name: new RegExp(tokens[0], 'i') }, { genericName: new RegExp(tokens[0], 'i') }],
++            });
++          }
++        }
++      }
+     }
+ 
+     // If still no direct match, try finding batch if user provided batch as query param
+@@ -45,6 +45,6 @@
+       batchMatch = await Batch.findOne({
+         medicineId: medicine._id,
+-        batchNumber: { $regex: `^${batchParam}$`, $options: 'i' },
++        batchNumber: { $regex: `^${batchParam.trim()}$`, $options: 'i' },
+       });
+     }
+ 
+@@ -55,6 +55,11 @@
+ 
+     // If absolutely nothing matched:
+     if (!medicine && !batchMatch) {
++      // Find top registered suggestions to show the user
++      const suggestions = await Medicine.find()
++        .limit(4)
++        .select('name genericName strength manufacturer referencePrice');
++
+       await logAccess({
+         req,
+         action: 'VERIFY_MEDICINE',
+@@ -61,4 +61,4 @@
+-        details: `Verification failed - No database match for query: "${rawQuery}"`,
++        details: `Verification query with no direct match: "${rawQuery}"`,
+       });
+ 
+       return res.json({
+@@ -65,7 +65,9 @@
+         matchFound: false,
+         verificationStatus: 'NOT FOUND',
+         badgeColor: 'danger',
+-        message: 'No record matching this name, batch, or barcode was found in the MedCheck BD reference database.',
++        queriedTerm: rawQuery,
++        message: `No approved reference or registered batch found directly matching "${rawQuery}".`,
++        suggestions,
+         disclaimer: 'Absence from this database does not guarantee an unregistered medicine, but warrants careful consultation with a licensed pharmacist or physician.',
+       });
+     }
+[diff_block_end]
+
+Please note that the above snippet only shows the MODIFIED lines from the last change. It shows up to 3 lines of unchanged lines before and after the modified lines. The actual file contents may have many more lines not shown.

@@ -1,0 +1,5 @@
+{"File":"C:\\Users\\User\\.gemini\\antigravity\\scratch\\medcheck-bd\\client\\css\\style.css","LineNumber":446,"LineContent":".autocomplete-dropdown {"}
+{"File":"C:\\Users\\User\\.gemini\\antigravity\\scratch\\medcheck-bd\\client\\js\\main.js","LineNumber":245,"LineContent":"  let dropdown = wrapper.querySelector('.autocomplete-dropdown');"}
+{"File":"C:\\Users\\User\\.gemini\\antigravity\\scratch\\medcheck-bd\\client\\js\\main.js","LineNumber":248,"LineContent":"    dropdown.className = 'autocomplete-dropdown d-none';"}
+{"File":"C:\\Users\\User\\.gemini\\antigravity\\scratch\\medcheck-bd\\client\\js\\main.js","LineNumber":370,"LineContent":"  let dropdown = wrapper.querySelector('.autocomplete-dropdown');"}
+{"File":"C:\\Users\\User\\.gemini\\antigravity\\scratch\\medcheck-bd\\client\\js\\main.js","LineNumber":373,"LineContent":"    dropdown.className = 'autocomplete-dropdown d-none';"}

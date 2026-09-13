@@ -1,0 +1,90 @@
+The following changes were made by the replace_file_content tool to: C:\Users\User\.gemini\antigravity\scratch\medcheck-bd\client\js\pharmacy.js. If relevant, proactively run terminal commands to execute this code for the USER. Don't ask for permission.
+[diff_block_start]
+@@ -35,11 +35,27 @@
+     if (!data.success || data.count === 0) {
+       container.innerHTML = `
+         <div class="col-12 text-center py-5">
+-          <div class="p-4 bg-white rounded-3 shadow-sm border text-center">
++          <div class="p-4 bg-white rounded-4 shadow-sm border text-center max-w-600 mx-auto">
+             <i class="fas fa-store-slash fa-3x text-muted mb-3"></i>
+-            <h5>No Pharmacies Found</h5>
+-            <p class="text-muted">No verified pharmacies matched your selected location or medicine search.</p>
+-            <button class="btn btn-outline-primary btn-sm" onclick="resetPharmacyFilters()">Reset Filters</button>
++            <h5 class="fw-bold text-navy">No Pharmacies Found</h5>
++            <p class="text-muted small mb-4">
++              No registered pharmacies directly matched your filter criteria 
++              ${search ? `("<strong>${search}</strong>")` : ''} 
++              ${area && area !== 'All Areas' ? `in <strong>${area}</strong>` : ''}
++              ${medicineName ? `with <strong>${medicineName}</strong> in stock` : ''}.
++            </p>
++            <div class="p-3 bg-light rounded-3 mb-4">
++              <span class="small fw-bold text-navy d-block mb-2"><i class="fas fa-lightbulb text-warning me-1"></i> Quick Search Suggestions:</span>
++              <div class="d-flex flex-wrap justify-content-center gap-2">
++                <button type="button" class="btn btn-outline-primary btn-sm" onclick="quickFilterPharmacy('MedCare')">MedCare Pharmacy</button>
++                <button type="button" class="btn btn-outline-primary btn-sm" onclick="quickFilterPharmacy('Lazz Pharma')">Lazz Pharma</button>
++                <button type="button" class="btn btn-outline-primary btn-sm" onclick="quickFilterPharmacy('Tamanna')">Tamanna Mirpur</button>
++                <button type="button" class="btn btn-outline-primary btn-sm" onclick="quickFilterPharmacy('Popular')">Popular Uttara</button>
++              </div>
++            </div>
++            <button class="btn btn-primary-custom btn-sm px-4" onclick="resetPharmacyFilters()">
++              <i class="fas fa-undo-alt me-1"></i> Reset All Filters
++            </button>
+           </div>
+         </div>
+       `;
+@@ -46,6 +46,23 @@
+     }
+ 
+-    container.innerHTML = data.data
++    let bannerHtml = '';
++    if (data.fallbackToAllAreas) {
++      bannerHtml = `
++        <div class="col-12 mb-4">
++          <div class="alert alert-info border-0 shadow-sm d-flex flex-wrap align-items-center justify-content-between p-3 rounded-3">
++            <div>
++              <i class="fas fa-info-circle fa-lg me-2 text-primary"></i>
++              <strong>Notice:</strong> ${data.message || `No pharmacy named "${search}" was found in ${data.searchedArea}. Showing matching branches in other areas:`}
++            </div>
++            <button class="btn btn-sm btn-outline-primary mt-2 mt-sm-0" onclick="setAreaFilter('All Areas')">
++              <i class="fas fa-globe me-1"></i> View All Bangladesh
++            </button>
++          </div>
++        </div>
++      `;
++    }
++
++    const cardsHtml = data.data
+       .map((p) => {
+         const sampleMeds =
+           p.availableSampleMedicines && p.availableSampleMedicines.length > 0
+@@ -96,6 +96,8 @@
+       `;
+       })
+       .join('');
++
++    container.innerHTML = bannerHtml + cardsHtml;
+   } catch (err) {
+     container.innerHTML = `
+       <div class="col-12 alert alert-danger" role="alert">
+@@ -104,6 +104,18 @@
+   }
+ }
+ 
++function quickFilterPharmacy(name) {
++  const searchInput = document.getElementById('searchPharmacy');
++  if (searchInput) searchInput.value = name;
++  loadPharmacies();
++}
++
++function setAreaFilter(areaName) {
++  const areaSelect = document.getElementById('filterArea');
++  if (areaSelect) areaSelect.value = areaName;
++  loadPharmacies();
++}
++
+ function resetPharmacyFilters() {
+   const areaSelect = document.getElementById('filterArea');
+   const searchInput = document.getElementById('searchPharmacy');
+[diff_block_end]
+
+Please note that the above snippet only shows the MODIFIED lines from the last change. It shows up to 3 lines of unchanged lines before and after the modified lines. The actual file contents may have many more lines not shown.

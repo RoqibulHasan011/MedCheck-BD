@@ -1,0 +1,99 @@
+The following changes were made by the replace_file_content tool to: C:\Users\User\.gemini\antigravity\scratch\medcheck-bd\server\seed\seedData.js. If relevant, proactively run terminal commands to execute this code for the USER. Don't ask for permission.
+[diff_block_start]
+@@ -1385,7 +1385,57 @@
+       date: new Date(Date.now() - 1000 * 60 * 60 * 24 * 2), // 2 days ago
+     });
+ 
+-    console.log('[Seed] Created sample digital sale receipt:', sampleSale.receiptId);
++    const mirpurPharmacy = createdPharmacies[1]; // MedCare Pharmacy Mirpur
++    const sampleSale2 = await Sale.create({
++      receiptId: 'MC-2026-784103',
++      pharmacyId: mirpurPharmacy._id,
++      customerId: customerUser._id,
++      customerName: customerUser.name,
++      customerPhone: customerUser.phone,
++      items: [
++        {
++          medicineId: createdMedicines[3]._id, // Ace Plus
++          medicineName: createdMedicines[3].name,
++          genericName: createdMedicines[3].genericName,
++          batchNumber: 'ACE-2026-01',
++          quantity: 10,
++          unitPrice: 2.50,
++          totalPrice: 25.00,
++        },
++      ],
++      subtotal: 25.00,
++      discount: 0,
++      totalPrice: 25.00,
++      paymentMethod: 'Cash on Delivery',
++      date: new Date(Date.now() - 1000 * 60 * 60 * 18), // 18 hours ago
++    });
++
++    const lazzMirpur = createdPharmacies[4]; // Lazz Pharma Mirpur
++    const sampleSale3 = await Sale.create({
++      receiptId: 'MC-2026-784104',
++      pharmacyId: lazzMirpur._id,
++      customerId: customerUser._id,
++      customerName: customerUser.name,
++      customerPhone: customerUser.phone,
++      items: [
++        {
++          medicineId: createdMedicines[5]._id, // Sergel 20 mg
++          medicineName: createdMedicines[5].name,
++          genericName: createdMedicines[5].genericName,
++          batchNumber: 'SER-2026-01',
++          quantity: 14,
++          unitPrice: 7.00,
++          totalPrice: 98.00,
++        },
++      ],
++      subtotal: 98.00,
++      discount: 3.00,
++      totalPrice: 95.00,
++      paymentMethod: 'Nagad',
++      date: new Date(Date.now() - 1000 * 60 * 60 * 4), // 4 hours ago
++    });
++
++    console.log('[Seed] Created sample digital sale receipts:', [sampleSale.receiptId, sampleSale2.receiptId, sampleSale3.receiptId]);
+ 
+     // 7. Create Customer Medicine History
+     await MedicineHistory.create([
+@@ -1417,6 +1417,34 @@
+       },
+       {
+         customerId: customerUser._id,
++        medicineId: createdMedicines[3]._id,
++        medicineName: createdMedicines[3].name,
++        genericName: createdMedicines[3].genericName,
++        manufacturer: createdMedicines[3].manufacturer,
++        batchNumber: 'ACE-2026-01',
++        verificationStatus: 'PURCHASED',
++        pharmacyId: mirpurPharmacy._id,
++        pharmacyName: mirpurPharmacy.name,
++        type: 'PURCHASE',
++        notes: 'Purchased with digital receipt MC-2026-784103 (Home Delivery)',
++        checkedAt: new Date(Date.now() - 1000 * 60 * 60 * 18),
++      },
++      {
++        customerId: customerUser._id,
++        medicineId: createdMedicines[5]._id,
++        medicineName: createdMedicines[5].name,
++        genericName: createdMedicines[5].genericName,
++        manufacturer: createdMedicines[5].manufacturer,
++        batchNumber: 'SER-2026-01',
++        verificationStatus: 'PURCHASED',
++        pharmacyId: lazzMirpur._id,
++        pharmacyName: lazzMirpur.name,
++        type: 'PURCHASE',
++        notes: 'Purchased with digital receipt MC-2026-784104',
++        checkedAt: new Date(Date.now() - 1000 * 60 * 60 * 4),
++      },
++      {
++        customerId: customerUser._id,
+         medicineId: createdMedicines[6]._id,
+         medicineName: createdMedicines[6].name,
+         genericName: createdMedicines[6].genericName,
+[diff_block_end]
+
+Please note that the above snippet only shows the MODIFIED lines from the last change. It shows up to 3 lines of unchanged lines before and after the modified lines. The actual file contents may have many more lines not shown.

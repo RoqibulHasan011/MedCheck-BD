@@ -1,0 +1,14 @@
+The following changes were made by the replace_file_content tool to: C:\Users\User\.gemini\antigravity\scratch\medcheck-bd\client\index.html. If relevant, proactively run terminal commands to execute this code for the USER. Don't ask for permission.
+[diff_block_start]
+@@ -73,7 +73,7 @@
+               <!-- Interactive Quick Search Bar in Hero -->
+               <form action="verify.html" method="GET" class="mb-4">
+                 <div class="input-group">
+-                  <input type="text" name="query" class="form-control" placeholder="e.g. Napa, Seclo, DAR-012..." style="border-radius: 8px 0 0 8px;">
++                  <input type="text" id="heroSearchInput" name="query" class="form-control" placeholder="e.g. Napa, Seclo, DAR-012..." style="border-radius: 8px 0 0 8px;">
+                   <button class="btn btn-primary-custom" type="submit" style="border-radius: 0 8px 8px 0;">
+                     <i class="fas fa-search"></i>
+                   </button>
+[diff_block_end]
+
+Please note that the above snippet only shows the MODIFIED lines from the last change. It shows up to 3 lines of unchanged lines before and after the modified lines. The actual file contents may have many more lines not shown.

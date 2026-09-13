@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Report Suspicious Medicine - MedCheck BD</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="bg-light">
+
+  <!-- Dynamic Navbar -->
+  <div id="mainNavbar"></div>
+
+  <main class="py-5">
+    <div class="container" style="max-width: 780px;">
+      <!-- Header -->
+      <div class="text-center mb-5">
+        <span class="badge bg-danger bg-opacity-10 text-danger fw-bold text-uppercase px-3 py-2 rounded-pill mb-2">
+          <i class="fas fa-flag me-1"></i> Community Vigilance
+        </span>
+        <h2 class="fw-bold text-navy">Report a Suspicious Medicine or Pharmacy</h2>
+        <p class="text-muted small">
+          Help protect fellow citizens by reporting suspected counterfeit packaging, scratched expiry dates, exorbitant retail prices, or unregistered batches.
+        </p>
+      </div>
+
+      <!-- Report Submission Card -->
+      <div class="card-custom p-4 p-md-5 bg-white mb-4" id="reportCardArea">
+        <form onsubmit="handleReportSubmit(event)">
+          <div class="row g-3 mb-3">
+            <div class="col-md-6">
+              <label class="form-label fw-bold text-navy small">Medicine Brand Name *</label>
+              <input type="text" id="reportMedName" class="form-control" placeholder="e.g. Ace Plus, Napa..." required>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label fw-bold text-navy small">Manufacturer (If known)</label>
+              <input type="text" id="reportManufacturer" class="form-control" placeholder="e.g. Square, Beximco...">
+            </div>
+          </div>
+
+          <div class="row g-3 mb-3">
+            <div class="col-md-6">
+              <label class="form-label fw-bold text-navy small">Batch Number (From Package/Blister)</label>
+              <input type="text" id="reportBatchNumber" class="form-control font-monospace" placeholder="e.g. ACE-FLAG-88">
+            </div>
+            <div class="col-md-6">
+              <label class="form-label fw-bold text-navy small">Problem Category *</label>
+              <select id="reportIssueType" class="form-select" required>
+                <option value="Suspected Counterfeit">Suspected Counterfeit</option>
+                <option value="Unregistered Medicine">Unregistered Medicine</option>
+                <option value="Wrong Price">Exorbitant / Wrong Price</option>
+                <option value="Expired Medicine">Expired Medicine Sold</option>
+                <option value="Damaged Packaging">Damaged or Faded Packaging</option>
+                <option value="Side Effect Incident">Unusual Side Effect Incident</option>
+                <option value="Other">Other Discrepancy</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="row g-3 mb-3">
+            <div class="col-md-6">
+              <label class="form-label fw-bold text-navy small">Purchased / Encountered Pharmacy Name</label>
+              <input type="text" id="reportPharmacyName" class="form-control" placeholder="e.g. Corner Drugstore">
+            </div>
+            <div class="col-md-6">
+              <label class="form-label fw-bold text-navy small">Pharmacy Location / Area</label>
+              <input type="text" id="reportPharmacyLocation" class="form-control" placeholder="e.g. Mirpur 11, Dhaka">
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label fw-bold text-navy small">Detailed Incident Description *</label>
+            <textarea
+              id="reportDescription"
+              class="form-control"
+              rows="4"
+              placeholder="Describe why this product seems suspicious (e.g. blurry text, unusual tablet smell or color, printed price scratched out, refused receipt)..."
+              required
+            ></textarea>
+          </div>
+
+          <!-- Photo Upload UI simulation -->
+          <div class="mb-4">
+            <label class="form-label fw-bold text-navy small">Attach Photo of Medicine / Blister Pack (Optional)</label>
+            <input type="file" id="reportPhotoInput" class="form-control" accept="image/*">
+            <small class="text-muted">Supports JPG, PNG packaging photos for administrative review.</small>
+          </div>
+
+          <!-- Contact Details (optional/auto-filled) -->
+          <div class="p-3 bg-light rounded-3 mb-4">
+            <h6 class="fw-bold text-navy small mb-2"><i class="fas fa-user-shield me-1"></i> Reporter Contact (Confidential)</h6>
+            <div class="row g-2">
+              <div class="col-md-6">
+                <input type="text" id="reportCustName" class="form-control form-control-sm" placeholder="Your Name (or Anonymous)">
+              </div>
+              <div class="col-md-6">
+                <input type="tel" id="reportCustPhone" class="form-control form-control-sm" placeholder="Phone Number for follow-up">
+              </div>
+            </div>
+          </div>
+
+          <button type="submit" id="submitReportBtn" class="btn btn-danger w-100 py-2">
+            <i class="fas fa-paper-plane me-2"></i>Submit Medicine Report
+          </button>
+        </form>
+
+        <div class="alert alert-light border mt-4 mb-0 small text-muted">
+          <i class="fas fa-info-circle text-primary me-1"></i>
+          <strong>Important Regulatory Disclosure:</strong> MedCheck BD is an information recording platform. Reports are reviewed by system administrators for database warning updates and do not constitute an official DGDA legal finding or physical laboratory test.
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Dynamic Footer -->
+  <div id="mainFooter"></div>
+
+  <!-- Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="js/main.js"></script>
+  <script src="js/auth.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const urlParams = new URLSearchParams(window.location.search);
+      const med = urlParams.get('medicine');
+      const batch = urlParams.get('batch');
+      const pharmacy = urlParams.get('pharmacy');
+
+      if (med) document.getElementById('reportMedName').value = decodeURIComponent(med);
+      if (batch) document.getElementById('reportBatchNumber').value = decodeURIComponent(batch);
+      if (pharmacy) document.getElementById('reportPharmacyName').value = decodeURIComponent(pharmacy);
+
+      const user = JSON.parse(localStorage.getItem('user') || 'null');
+      if (user) {
+        if (user.name) document.getElementById('reportCustName').value = user.name;
+        if (user.phone) document.getElementById('reportCustPhone').value = user.phone;
+      }
+
+      setupMedicineAutocomplete('reportMedName');
+      setupPharmacyAutocomplete('reportPharmacyName');
+    });
+
+    async function handleReportSubmit(e) {
+      e.preventDefault();
+      const medicineName = document.getElementById('reportMedName').value.trim();
+      const manufacturer = document.getElementById('reportManufacturer').value.trim();
+      const batchNumber = document.getElementById('reportBatchNumber').value.trim();
+      const issueType = document.getElementById('reportIssueType').value;
+      const pharmacyName = document.getElementById('reportPharmacyName').value.trim();
+      const pharmacyLocation = document.getElementById('reportPharmacyLocation').value.trim();
+      const description = document.getElementById('reportDescription').value.trim();
+      const customerName = document.getElementById('reportCustName').value.trim();
+      const customerPhone = document.getElementById('reportCustPhone').value.trim();
+      const submitBtn = document.getElementById('submitReportBtn');
+
+      if (!medicineName || !description) {
+        showToast('Please provide medicine name and description', 'warning');
+        return;
+      }
+
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Submitting report...';
+
+      try {
+        const token = localStorage.getItem('token');
+        const headers = { 'Content-Type': 'application/json' };
+        if (token) headers.Authorization = `Bearer ${token}`;
+
+        const res = await fetch('/api/reports', {
+          method: 'POST',
+          headers,
+          body: JSON.stringify({
+            medicineName,
+            manufacturer,
+            batchNumber,
+            issueType,
+            pharmacyName,
+            pharmacyLocation,
+            description,
+            customerName,
+            customerPhone,
+          }),
+        });
+
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.message);
+
+        // Render success confirmation card
+        const cardArea = document.getElementById('reportCardArea');
+        cardArea.innerHTML = `
+          <div class="text-center py-4">
+            <div class="rounded-circle bg-success bg-opacity-10 text-success d-inline-flex align-items-center justify-content-center p-3 mb-3" style="width: 70px; height: 70px;">
+              <i class="fas fa-check-circle fa-2x"></i>
+            </div>
+            <h3 class="fw-bold text-navy mb-2">Report Submitted Successfully</h3>
+            <p class="text-muted small max-w-500 mx-auto mb-4">
+              Your report has been received and registered under Reference ID:
+            </p>
+            <div class="p-3 bg-light rounded-3 d-inline-block font-monospace fw-bold fs-4 text-primary mb-4 border">
+              ${data.reportId}
+            </div>
+            <div class="alert alert-info small border-0 mb-4 max-w-500 mx-auto">
+              <strong>Status: Pending Review</strong><br>
+              System administrators will cross-check the batch information. Thank you for making Bangladesh healthcare safer.
+            </div>
+            <div class="d-flex justify-content-center gap-2">
+              <a href="index.html" class="btn btn-outline-secondary btn-sm">Return Home</a>
+              <a href="verify.html" class="btn btn-primary-custom btn-sm">Verify Another Medicine</a>
+            </div>
+          </div>
+        `;
+
+        showToast(`Report ${data.reportId} submitted`, 'success');
+      } catch (err) {
+        showToast(err.message, 'danger');
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = '<i class="fas fa-paper-plane me-2"></i>Submit Medicine Report';
+      }
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,40 @@
+
+The command exited with code 0.
+Output:
+[Database] Attempting connection to MongoDB at: mongodb://127.0.0.1:27017/medcheck_bd
+[Database] Connected successfully to live MongoDB: 127.0.0.1
+[Seed] Starting database cleanup and seeding...
+[Seed] Cleared existing collections.
+[Seed] Created default users (Admin, Pharmacy, Customer).
+[Seed] Created 67 verified medicines.
+[Seed] Created 137 medicine batches.
+[Seed] Created 14 pharmacies across Bangladesh.
+[Seed] Created 753 inventory records with dynamic price variances.
+[Seed Error] Error: Sale validation failed: paymentMethod: `Cash on Delivery` is not a valid enum value for path `paymentMethod`.
+    at ValidationError.inspect (C:\Users\User\.gemini\antigravity\scratch\medcheck-bd\node_modules\mongoose\lib\error\validation.js:52:26)
+    at formatValue (node:internal/util/inspect:897:19)
+    at inspect (node:internal/util/inspect:409:10)
+    at formatWithOptionsInternal (node:internal/util/inspect:2645:40)
+    at formatWithOptions (node:internal/util/inspect:2507:10)
+    at console.value (node:internal/console/constructor:377:14)
+    at console.error (node:internal/console/constructor:444:61)
+    at seedDatabase (C:\Users\User\.gemini\antigravity\scratch\medcheck-bd\server\seed\seedData.js:1577:13)
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at async C:\Users\User\.gemini\antigravity\scratch\medcheck-bd\server\seed\seedData.js:1585:5 {
+  errors: {
+    paymentMethod: ValidatorError: `Cash on Delivery` is not a valid enum value for path `paymentMethod`.
+        at validate (C:\Users\User\.gemini\antigravity\scratch\medcheck-bd\node_modules\mongoose\lib\schemaType.js:1440:13)
+        at SchemaType.doValidate (C:\Users\User\.gemini\antigravity\scratch\medcheck-bd\node_modules\mongoose\lib\schemaType.js:1424:7)
+        at C:\Users\User\.gemini\antigravity\scratch\medcheck-bd\node_modules\mongoose\lib\document.js:3140:18
+        at process.processTicksAndRejections (node:internal/process/task_queues:85:11) {
+      properties: [Object],
+      kind: 'enum',
+      path: 'paymentMethod',
+      value: 'Cash on Delivery',
+      reason: undefined,
+      Symbol(mongoose#validatorError): true
+    }
+  },
+  _message: 'Sale validation failed'
+}
+

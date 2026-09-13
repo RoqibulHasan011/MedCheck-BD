@@ -1,0 +1,290 @@
+The following changes were made by the replace_file_content tool to: C:\Users\User\.gemini\antigravity\scratch\medcheck-bd\client\js\main.js. If relevant, proactively run terminal commands to execute this code for the USER. Don't ask for permission.
+[diff_block_start]
+@@ -475,6 +475,284 @@
+   });
+ }
+ 
++// Local Medicine History Helpers
++function getLocalHistory() {
++  try {
++    return JSON.parse(localStorage.getItem('medcheck_local_history') || '[]');
++  } catch (e) {
++    return [];
++  }
++}
++
++function saveLocalHistoryItem(item) {
++  try {
++    const list = getLocalHistory();
++    list.unshift({
++      _id: 'local_' + Date.now(),
++      medicineId: item.medicineId || null,
++      medicineName: item.medicineName || 'Medicine',
++      genericName: item.genericName || '',
++      manufacturer: item.manufacturer || '',
++      batchNumber: item.batchNumber || 'N/A',
++      verificationStatus: item.verificationStatus || 'DATABASE MATCH',
++      pharmacyName: item.pharmacyName || '',
++      type: item.type || 'VERIFICATION',
++      notes: item.notes || '',
++      checkedAt: new Date().toISOString(),
++      isLocal: true,
++    });
++    localStorage.setItem('medcheck_local_history', JSON.stringify(list.slice(0, 50)));
++  } catch (e) {
++    console.warn('Could not save local history', e);
++  }
++}
++
++// Global Reusable Customer Order Modal
++window.openCustomerOrderModal = function (opts) {
++  let modalEl = document.getElementById('customerOrderModal');
++  if (!modalEl) {
++    modalEl = document.createElement('div');
++    modalEl.id = 'customerOrderModal';
++    modalEl.className = 'modal fade';
++    modalEl.tabIndex = -1;
++    modalEl.innerHTML = `
++      <div class="modal-dialog modal-dialog-centered">
++        <div class="modal-content border-0 shadow-lg" style="border-radius: 16px; overflow: hidden;">
++          <div class="modal-header bg-navy text-white px-4 py-3">
++            <h5 class="modal-title fw-bold">
++              <i class="fas fa-shopping-cart text-success me-2"></i>Order Medicine Online
++            </h5>
++            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
++          </div>
++          <div class="modal-body p-4">
++            <!-- Medicine & Pharmacy Card -->
++            <div class="p-3 bg-light rounded-3 mb-3 border">
++              <div class="d-flex justify-content-between align-items-start">
++                <div>
++                  <h5 class="fw-bold text-navy mb-0" id="orderMedName">Medicine Name</h5>
++                  <div class="small text-muted" id="orderMedGeneric">Generic Details</div>
++                </div>
++                <div class="text-end">
++                  <div class="fs-4 fw-bold text-primary" id="orderUnitPrice">৳0.00</div>
++                  <small class="text-muted">per unit</small>
++                </div>
++              </div>
++              <hr class="my-2 opacity-25">
++              <div class="small text-secondary">
++                <i class="fas fa-clinic-medical text-success me-1"></i> Dispensing Pharmacy: 
++                <strong id="orderPharmacyName" class="text-dark">Pharmacy Name</strong>
++                <span id="orderPharmacyArea" class="badge bg-white border text-dark ms-1">Area</span>
++              </div>
++            </div>
++
++            <form id="customerOrderForm" onsubmit="submitCustomerOrder(event)">
++              <!-- Quantity & Total -->
++              <div class="row g-3 mb-3 align-items-center">
++                <div class="col-sm-6">
++                  <label class="form-label fw-bold text-navy small">Quantity (Units / Strips)</label>
++                  <div class="input-group">
++                    <button class="btn btn-outline-secondary" type="button" onclick="adjustOrderQty(-1)">-</button>
++                    <input type="number" id="orderQuantity" class="form-control text-center fw-bold" value="1" min="1" max="100" required oninput="recalcOrderTotal()">
++                    <button class="btn btn-outline-secondary" type="button" onclick="adjustOrderQty(1)">+</button>
++                  </div>
++                </div>
++                <div class="col-sm-6 text-sm-end">
++                  <span class="small text-muted d-block">Estimated Total:</span>
++                  <div class="fs-3 fw-bold text-success" id="orderTotalPrice">৳0.00</div>
++                </div>
++              </div>
++
++              <!-- Delivery Preference -->
++              <div class="mb-3">
++                <label class="form-label fw-bold text-navy small">Fulfillment Option</label>
++                <div class="row g-2">
++                  <div class="col-6">
++                    <input type="radio" class="btn-check" name="orderDeliveryType" id="delivHome" value="Home Delivery" checked onchange="toggleOrderAddress(true)">
++                    <label class="btn btn-outline-primary w-100 py-2 small fw-bold" for="delivHome">
++                      <i class="fas fa-motorcycle me-1"></i> Home Delivery
++                    </label>
++                  </div>
++                  <div class="col-6">
++                    <input type="radio" class="btn-check" name="orderDeliveryType" id="delivPickup" value="Store Pickup" onchange="toggleOrderAddress(false)">
++                    <label class="btn btn-outline-primary w-100 py-2 small fw-bold" for="delivPickup">
++                      <i class="fas fa-walking me-1"></i> Pharmacy Pickup
++                    </label>
++                  </div>
++                </div>
++              </div>
++
++              <!-- Customer Info -->
++              <div class="row g-2 mb-3">
++                <div class="col-sm-6">
++                  <label class="form-label fw-bold text-navy small">Recipient Name *</label>
++                  <input type="text" id="orderCustName" class="form-control form-control-sm" required placeholder="Your Full Name">
++                </div>
++                <div class="col-sm-6">
++                  <label class="form-label fw-bold text-navy small">Mobile Phone (BD) *</label>
++                  <input type="tel" id="orderCustPhone" class="form-control form-control-sm" required placeholder="01XXXXXXXXX">
++                </div>
++              </div>
++
++              <!-- Delivery Address -->
++              <div class="mb-3" id="orderAddressWrapper">
++                <label class="form-label fw-bold text-navy small">Delivery Address *</label>
++                <input type="text" id="orderCustAddress" class="form-control form-control-sm" placeholder="House, Road, Area, Dhaka...">
++              </div>
++
++              <!-- Payment Method -->
++              <div class="mb-4">
++                <label class="form-label fw-bold text-navy small">Payment Method</label>
++                <select id="orderPaymentMethod" class="form-select form-select-sm">
++                  <option value="Cash on Delivery">Cash on Delivery (COD)</option>
++                  <option value="bKash">bKash Mobile Payment</option>
++                  <option value="Nagad">Nagad Mobile Payment</option>
++                </select>
++              </div>
++
++              <button type="submit" id="orderSubmitBtn" class="btn btn-primary-custom w-100 py-2 fw-bold shadow">
++                <i class="fas fa-check-circle me-1"></i> Confirm & Place Order
++              </button>
++            </form>
++          </div>
++        </div>
++      </div>
++    `;
++    document.body.appendChild(modalEl);
++  }
++
++  // Prepopulate modal with current options
++  window._currentOrderOpts = opts;
++  const unitPrice = Number(opts.price) || 1.2;
++
++  document.getElementById('orderMedName').textContent = opts.medicineName || 'Selected Medicine';
++  document.getElementById('orderMedGeneric').textContent = `${opts.genericName || ''} • ${opts.strength || ''}`;
++  document.getElementById('orderUnitPrice').textContent = formatBDT(unitPrice);
++  document.getElementById('orderPharmacyName').textContent = opts.pharmacyName || 'Verified Pharmacy';
++  document.getElementById('orderPharmacyArea').textContent = opts.pharmacyArea || 'Dhaka';
++  document.getElementById('orderQuantity').value = 1;
++
++  // Prefill user data if logged in
++  const user = JSON.parse(localStorage.getItem('user') || 'null');
++  if (user) {
++    document.getElementById('orderCustName').value = user.name || '';
++    document.getElementById('orderCustPhone').value = user.phone || '';
++  }
++
++  recalcOrderTotal();
++  const bsModal = new bootstrap.Modal(modalEl);
++  bsModal.show();
++};
++
++window.adjustOrderQty = function (delta) {
++  const input = document.getElementById('orderQuantity');
++  if (!input) return;
++  let val = (parseInt(input.value) || 1) + delta;
++  if (val < 1) val = 1;
++  if (val > 100) val = 100;
++  input.value = val;
++  recalcOrderTotal();
++};
++
++window.recalcOrderTotal = function () {
++  const input = document.getElementById('orderQuantity');
++  const price = window._currentOrderOpts ? Number(window._currentOrderOpts.price) : 0;
++  const qty = input ? Math.max(1, parseInt(input.value) || 1) : 1;
++  const total = Number((price * qty).toFixed(2));
++  const totalEl = document.getElementById('orderTotalPrice');
++  if (totalEl) totalEl.textContent = formatBDT(total);
++};
++
++window.toggleOrderAddress = function (isDelivery) {
++  const wrapper = document.getElementById('orderAddressWrapper');
++  const input = document.getElementById('orderCustAddress');
++  if (wrapper) wrapper.style.display = isDelivery ? 'block' : 'none';
++  if (input) input.required = isDelivery;
++};
++
++window.submitCustomerOrder = async function (e) {
++  if (e) e.preventDefault();
++  const opts = window._currentOrderOpts || {};
++  const btn = document.getElementById('orderSubmitBtn');
++
++  const quantity = parseInt(document.getElementById('orderQuantity').value) || 1;
++  const customerName = document.getElementById('orderCustName').value.trim();
++  const customerPhone = document.getElementById('orderCustPhone').value.trim();
++  const deliveryType = document.querySelector('input[name="orderDeliveryType"]:checked')?.value || 'Home Delivery';
++  const customerAddress = document.getElementById('orderCustAddress')?.value.trim() || '';
++  const paymentMethod = document.getElementById('orderPaymentMethod').value;
++
++  if (deliveryType === 'Home Delivery' && !customerAddress) {
++    showToast('Please enter your delivery address', 'warning');
++    return;
++  }
++
++  if (btn) {
++    btn.disabled = true;
++    btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Placing order...';
++  }
++
++  try {
++    const token = localStorage.getItem('token');
++    const headers = { 'Content-Type': 'application/json' };
++    if (token) headers.Authorization = `Bearer ${token}`;
++
++    const res = await fetch('/api/sales/customer-order', {
++      method: 'POST',
++      headers,
++      body: JSON.stringify({
++        pharmacyId: opts.pharmacyId,
++        medicineId: opts.medicineId,
++        batchNumber: opts.batchNumber,
++        quantity,
++        customerName,
++        customerPhone,
++        customerAddress,
++        deliveryType,
++        paymentMethod,
++      }),
++    });
++
++    const data = await res.json();
++    if (!res.ok) throw new Error(data.message || 'Failed to place order');
++
++    // Save to local history immediately
++    saveLocalHistoryItem({
++      medicineId: opts.medicineId,
++      medicineName: opts.medicineName,
++      genericName: opts.genericName,
++      manufacturer: opts.manufacturer,
++      batchNumber: opts.batchNumber || 'BATCH-ONLINE',
++      verificationStatus: 'PURCHASED',
++      pharmacyName: opts.pharmacyName,
++      type: 'PURCHASE',
++      notes: `Receipt ${data.receiptId} • ${deliveryType}`,
++    });
++
++    // Close modal
++    const modalEl = document.getElementById('customerOrderModal');
++    const bsModal = bootstrap.Modal.getInstance(modalEl);
++    if (bsModal) bsModal.hide();
++
++    // Show success dialog
++    showToast(`Order Confirmed! Receipt: ${data.receiptId}`, 'success');
++
++    setTimeout(() => {
++      if (confirm(`Order placed successfully!\nReceipt: ${data.receiptId}\n\nWould you like to view your printable digital receipt now?`)) {
++        window.location.href = `receipt.html?id=${data.receiptId}`;
++      } else if (window.location.pathname.includes('history.html')) {
++        if (typeof loadCustomerHistory === 'function') loadCustomerHistory();
++      }
++    }, 400);
++  } catch (err) {
++    showToast(err.message, 'danger');
++  } finally {
++    if (btn) {
++      btn.disabled = false;
++      btn.innerHTML = '<i class="fas fa-check-circle me-1"></i> Confirm & Place Order';
++    }
++  }
++};
++
+ // Auto-run on DOM Content Loaded
+ document.addEventListener('DOMContentLoaded', () => {
+   renderNavbar();
+[diff_block_end]
+
+Please note that the above snippet only shows the MODIFIED lines from the last change. It shows up to 3 lines of unchanged lines before and after the modified lines. The actual file contents may have many more lines not shown.

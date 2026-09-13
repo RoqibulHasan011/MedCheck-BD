@@ -1,0 +1,4 @@
+
+The command exited with code 0.
+Output:
+{"success":true,"count":1,"data":[{"_id":"6aa30aed2b2ebf79d0106113","name":"MedCare Pharmacy Mirpur","ownerName":"Mohammad Faruk Hossain","phone":"+8801819000021","email":"mirpur@medcare.com","address":"Plot 14, Main Road, Section 10, Mirpur","area":"Mirpur","division":"Dhaka","licenseNumber":"DL-DHK-2023-4418","verified":true,"status":"Approved","openingHours":"24 Hours","isOpenNow":true,"userId":"6aa30aed2b2ebf79d0105f71","createdAt":"2026-09-10T19:54:21.737Z","__v":0,"availableSampleMedicines":["Napa 500 mg","Napa Extra","Napa One 1000 mg","Ace Plus","Seclo 20 mg"]}],"fallbackToAllAreas":false,"searchedArea":null}

@@ -1,0 +1,16 @@
+
+The command exited with code 0.
+Output:
+[HTTP 200] /api/health -> length: 105 bytes
+[HTTP 200] /api/verify/Napa%20500%20mg -> length: 1933 bytes
+[HTTP 200] /api/inventory/compare?query=Napa -> length: 1510 bytes
+[HTTP 200] /api/pharmacies?area=Dhanmondi -> length: 1099 bytes
+[HTTP 200] /index.html -> length: 15838 bytes
+[HTTP 200] /verify.html -> length: 5222 bytes
+[HTTP 200] /price.html -> length: 10861 bytes
+[HTTP 200] /pharmacies.html -> length: 4227 bytes
+[HTTP 200] /customer-dashboard.html -> length: 11823 bytes
+[HTTP 200] /pharmacy-dashboard.html -> length: 14074 bytes
+[HTTP 200] /admin-dashboard.html -> length: 13853 bytes
+ALL HTTP ENDPOINTS WORKING PERFECTLY!
+

@@ -1,0 +1,30 @@
+The following changes were made by the replace_file_content tool to: C:\Users\User\.gemini\antigravity\scratch\medcheck-bd\client\js\verify.js. If relevant, proactively run terminal commands to execute this code for the USER. Don't ask for permission.
+[diff_block_start]
+@@ -239,8 +239,22 @@
+                 <td><i class="fas fa-map-marker-alt text-danger me-1 small"></i>${p.area}</td>
+                 <td><span class="badge ${p.quantity < 10 ? 'bg-warning text-dark' : 'bg-success'}">${p.quantity} Units</span></td>
+                 <td class="fw-bold text-primary">${formatBDT(p.price)}</td>
+-                <td>
+-                  <a href="pharmacy-details.html?id=${p.pharmacyId}" class="btn btn-outline-primary btn-sm py-0 px-2">View Stock</a>
++                <td class="text-nowrap">
++                  <button class="btn btn-primary-custom btn-sm py-0 px-2 me-1" onclick='openCustomerOrderModal(${JSON.stringify({
++                    medicineId: medicine.id,
++                    medicineName: medicine.name,
++                    genericName: medicine.genericName,
++                    dosageForm: medicine.dosageForm,
++                    strength: medicine.strength,
++                    batchNumber: batch ? batch.batchNumber : "",
++                    price: p.price,
++                    pharmacyId: p.pharmacyId,
++                    pharmacyName: p.name,
++                    pharmacyArea: p.area
++                  }).replace(/'/g, "&apos;")})'>
++                    <i class="fas fa-shopping-cart me-1"></i>Buy
++                  </button>
++                  <a href="pharmacy-details.html?id=${p.pharmacyId}" class="btn btn-outline-secondary btn-sm py-0 px-2">Details</a>
+                 </td>
+               </tr>
+             `
+[diff_block_end]
+
+Please note that the above snippet only shows the MODIFIED lines from the last change. It shows up to 3 lines of unchanged lines before and after the modified lines. The actual file contents may have many more lines not shown.

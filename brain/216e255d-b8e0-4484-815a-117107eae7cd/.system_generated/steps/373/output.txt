@@ -1,0 +1,16 @@
+The following changes were made by the replace_file_content tool to: C:\Users\User\.gemini\antigravity\scratch\medcheck-bd\client\price.html. If relevant, proactively run terminal commands to execute this code for the USER. Don't ask for permission.
+[diff_block_start]
+@@ -90,6 +90,10 @@
+         if (input) input.value = decodeURIComponent(medicine);
+         executePriceCheck(medicine);
+       }
++
++      setupMedicineAutocomplete('priceSearchInput', (name) => {
++        executePriceCheck(name);
++      });
+     });
+ 
+     function searchPriceFor(name) {
+[diff_block_end]
+
+Please note that the above snippet only shows the MODIFIED lines from the last change. It shows up to 3 lines of unchanged lines before and after the modified lines. The actual file contents may have many more lines not shown.

@@ -1,0 +1,60 @@
+The following changes were made by the replace_file_content tool to: C:\Users\User\.gemini\antigravity\scratch\medcheck-bd\server\seed\seedData.js. If relevant, proactively run terminal commands to execute this code for the USER. Don't ask for permission.
+[diff_block_start]
+@@ -33,11 +33,7 @@
+ 
+     console.log('[Seed] Cleared existing collections.');
+ 
+-    // 1. Create Users
+-    const hashedPassword = await bcrypt.hash('Admin@1234', 10);
+-    const pharmacyPassword = await bcrypt.hash('Pharmacy@123', 10);
+-    const customerPassword = await bcrypt.hash('Customer@123', 10);
+-
++    // 1. Create Users (User pre-save hook will hash passwords)
+     const adminUser = await User.create({
+       name: 'Dr. Tanvir Ahmed (Director)',
+       email: 'admin@medcheckbd.com',
+@@ -44,4 +44,4 @@
+-      password: hashedPassword,
++      password: 'Admin@1234',
+       role: 'admin',
+     });
+ 
+@@ -48,7 +48,7 @@
+       name: 'Mohammad Faruk Hossain',
+       email: 'pharmacy@medcare.com',
+       phone: '+8801819000002',
+-      password: pharmacyPassword,
++      password: 'Pharmacy@123',
+       role: 'pharmacy',
+     });
+ 
+@@ -55,7 +55,7 @@
+       name: 'Kabir Chowdhury',
+       email: 'lazz@lazzpharma.com',
+       phone: '+8801712000003',
+-      password: pharmacyPassword,
++      password: 'Pharmacy@123',
+       role: 'pharmacy',
+     });
+ 
+@@ -62,7 +62,7 @@
+       name: 'Shakil Mahmud',
+       email: 'customer@gmail.com',
+       phone: '+8801913000004',
+-      password: customerPassword,
++      password: 'Customer@123',
+       role: 'customer',
+     });
+ 
+@@ -69,7 +69,7 @@
+       name: 'Nusrat Jahan',
+       email: 'nusrat@gmail.com',
+       phone: '+8801614000005',
+-      password: customerPassword,
++      password: 'Customer@123',
+       role: 'customer',
+     });
+ 
+[diff_block_end]
+
+Please note that the above snippet only shows the MODIFIED lines from the last change. It shows up to 3 lines of unchanged lines before and after the modified lines. The actual file contents may have many more lines not shown.

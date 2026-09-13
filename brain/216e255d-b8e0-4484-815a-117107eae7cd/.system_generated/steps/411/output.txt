@@ -1,0 +1,4 @@
+
+The command exited with code 0.
+Output:
+{"success":true,"count":1,"data":[{"_id":"6aa30aed2b2ebf79d0106116","name":"Lazz Pharma Mirpur","ownerName":"Kabir Chowdhury","phone":"+8801712000023","email":"mirpur@lazzpharma.com","address":"Mirpur 10 Circle, Begum Rokeya Sarani, Mirpur","area":"Mirpur","division":"Dhaka","licenseNumber":"DL-DHK-2022-1008","verified":true,"status":"Approved","openingHours":"24 Hours","isOpenNow":true,"userId":"6aa30aed2b2ebf79d0105f73","createdAt":"2026-09-10T19:54:21.738Z","__v":0,"availableSampleMedicines":["Napa Extra","Napa One 1000 mg","Ace Plus","Seclo 20 mg","Sergel 20 mg"]}],"fallbackToAllAreas":false,"searchedArea":null}

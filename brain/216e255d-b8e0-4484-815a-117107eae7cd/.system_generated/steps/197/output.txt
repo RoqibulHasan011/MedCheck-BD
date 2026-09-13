@@ -1,0 +1,70 @@
+The following changes were made by the replace_file_content tool to: C:\Users\User\.gemini\antigravity\scratch\medcheck-bd\server\seed\seedData.js. If relevant, proactively run terminal commands to execute this code for the USER. Don't ask for permission.
+[diff_block_start]
+@@ -1285,7 +1285,7 @@
+     });
+ 
+     // Populate second pharmacy (Lazz Pharma) with stock
+-    createdMedicines.slice(0, 15).forEach((med, idx) => {
++    createdMedicines.slice(0, 55).forEach((med, idx) => {
+       const medBatches = createdBatches.filter((b) => String(b.medicineId) === String(med._id));
+       const activeBatch = medBatches[0];
+       if (activeBatch) {
+@@ -1292,9 +1292,9 @@
+           pharmacyId: secondPharmacy._id,
+           medicineId: med._id,
+           batchId: activeBatch._id,
+-          quantity: 35 + (idx * 5),
++          quantity: 35 + (idx * 3),
+           purchasePrice: Number((med.referencePrice * 0.83).toFixed(2)),
+-          sellingPrice: Number((med.referencePrice + (idx % 2 === 0 ? 0.20 : 0)).toFixed(2)),
++          sellingPrice: Number((med.referencePrice + (idx % 2 === 0 ? 0.20 : -0.10)).toFixed(2)),
+         });
+       }
+     });
+@@ -1301,5 +1301,5 @@
+     // Populate third pharmacy (Tamanna Mirpur)
+-    createdMedicines.slice(0, 10).forEach((med) => {
++    createdMedicines.slice(0, 45).forEach((med, idx) => {
+       const medBatches = createdBatches.filter((b) => String(b.medicineId) === String(med._id));
+       const activeBatch = medBatches[0];
+       if (activeBatch) {
+@@ -1306,12 +1306,31 @@
+           pharmacyId: thirdPharmacy._id,
+           medicineId: med._id,
+           batchId: activeBatch._id,
+-          quantity: 20,
++          quantity: 25 + (idx * 2),
+           purchasePrice: Number((med.referencePrice * 0.84).toFixed(2)),
+-          sellingPrice: med.referencePrice,
+-        });
+-      }
+-    });
++          sellingPrice: Number((med.referencePrice + (idx % 3 === 0 ? 0.30 : 0)).toFixed(2)),
++        });
++      }
++    });
++
++    // Populate fourth pharmacy (Popular Uttara)
++    const fourthPharmacy = createdPharmacies[3];
++    if (fourthPharmacy) {
++      createdMedicines.slice(0, 40).forEach((med, idx) => {
++        const medBatches = createdBatches.filter((b) => String(b.medicineId) === String(med._id));
++        const activeBatch = medBatches[0];
++        if (activeBatch) {
++          inventoryData.push({
++            pharmacyId: fourthPharmacy._id,
++            medicineId: med._id,
++            batchId: activeBatch._id,
++            quantity: 30,
++            purchasePrice: Number((med.referencePrice * 0.82).toFixed(2)),
++            sellingPrice: Number((med.referencePrice + (idx % 2 === 0 ? -0.15 : 0.10)).toFixed(2)),
++          });
++        }
++      });
++    }
+ 
+     const createdInventory = await Inventory.create(inventoryData);
+     console.log(`[Seed] Created ${createdInventory.length} inventory records with dynamic price variances.`);
+[diff_block_end]
+
+Please note that the above snippet only shows the MODIFIED lines from the last change. It shows up to 3 lines of unchanged lines before and after the modified lines. The actual file contents may have many more lines not shown.

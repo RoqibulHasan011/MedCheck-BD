@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Medicine Details - MedCheck BD</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- Dynamic Navbar -->
+  <div id="mainNavbar"></div>
+
+  <main class="py-5">
+    <div class="container" style="max-width: 960px;">
+      <!-- Breadcrumb -->
+      <nav aria-label="breadcrumb" class="mb-4">
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+          <li class="breadcrumb-item"><a href="verify.html">Verification</a></li>
+          <li class="breadcrumb-item active" aria-current="page">Medicine Details</li>
+        </ol>
+      </nav>
+
+      <div id="medicineDetailsArea">
+        <div class="text-center py-5">
+          <div class="spinner-border text-primary" role="status"></div>
+          <p class="text-muted mt-2">Loading medicine profile...</p>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Dynamic Footer -->
+  <div id="mainFooter"></div>
+
+  <!-- Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="js/main.js"></script>
+  <script src="js/auth.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+      const urlParams = new URLSearchParams(window.location.search);
+      const medicineId = urlParams.get('id');
+      const container = document.getElementById('medicineDetailsArea');
+
+      if (!medicineId) {
+        container.innerHTML = `
+          <div class="alert alert-warning">
+            No medicine selected. Please search for a medicine on the <a href="verify.html">Verification Page</a>.
+          </div>
+        `;
+        return;
+      }
+
+      try {
+        const res = await fetch(`/api/medicines/${medicineId}`);
+        const data = await res.json();
+
+        if (!data.success || !data.data) {
+          throw new Error(data.message || 'Medicine not found');
+        }
+
+        const med = data.data;
+        const batches = med.batches || [];
+
+        let alertsHtml = '';
+        if (med.alerts && med.alerts.length > 0) {
+          alertsHtml = `
+            <div class="alert alert-danger border-0 mb-4 shadow-sm">
+              <h6 class="fw-bold mb-2"><i class="fas fa-exclamation-triangle me-2"></i>Active Health Warnings / Alerts:</h6>
+              <ul class="mb-0 ps-3">
+                ${med.alerts.map(a => `<li><strong>${a.alertType}:</strong> ${a.message}</li>`).join('')}
+              </ul>
+            </div>
+          `;
+        }
+
+        let batchesRows = '<tr><td colspan="5" class="text-muted text-center py-3">No registered batch records found.</td></tr>';
+        if (batches.length > 0) {
+          batchesRows = batches.map(b => {
+            let pillClass = 'match';
+            if (b.computedStatus === 'EXPIRING_SOON') pillClass = 'review';
+            if (b.computedStatus === 'EXPIRED' || b.computedStatus === 'SUSPICIOUS' || b.computedStatus === 'RECALLED') pillClass = 'alert';
+
+            return `
+              <tr>
+                <td class="font-monospace fw-bold">${b.batchNumber}</td>
+                <td>${formatDate(b.manufacturingDate)}</td>
+                <td>${formatDate(b.expiryDate)}</td>
+                <td><span class="status-pill ${pillClass}">${b.computedStatus}</span></td>
+                <td>${b.reportedCounterfeitCount > 0 ? `<span class="badge bg-danger">${b.reportedCounterfeitCount} Discrepancies Reported</span>` : '<span class="text-success small">Clean Record</span>'}</td>
+              </tr>
+            `;
+          }).join('');
+        }
+
+        container.innerHTML = `
+          <div class="card-custom p-4 mb-4">
+            <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-4 border-bottom pb-4">
+              <div>
+                <span class="status-pill ${med.registrationStatus === 'REGISTERED' ? 'registered' : 'review'} mb-2">
+                  <i class="fas fa-check-circle me-1"></i> ${med.registrationStatus}
+                </span>
+                <h2 class="fw-bold text-navy mb-1">${med.name}</h2>
+                <div class="text-secondary fs-5">${med.genericName} • ${med.strength}</div>
+                <div class="text-muted small mt-1">Manufacturer: <strong>${med.manufacturer}</strong></div>
+              </div>
+              <div class="text-lg-end">
+                <span class="text-muted small d-block">DGDA Benchmark Reference Price</span>
+                <span class="fs-2 fw-bold text-primary">${formatBDT(med.referencePrice)}</span>
+                <span class="text-muted small d-block">per ${med.dosageForm}</span>
+              </div>
+            </div>
+
+            ${alertsHtml}
+
+            <!-- Basic & Regulatory Information -->
+            <div class="row g-4 mb-4">
+              <div class="col-md-6">
+                <h5 class="fw-bold text-navy mb-3"><i class="fas fa-pills text-primary me-2"></i>Basic Information</h5>
+                <div class="result-detail-row">
+                  <span class="result-detail-label">Brand Name</span>
+                  <span class="result-detail-value">${med.name}</span>
+                </div>
+                <div class="result-detail-row">
+                  <span class="result-detail-label">Generic Name</span>
+                  <span class="result-detail-value">${med.genericName}</span>
+                </div>
+                <div class="result-detail-row">
+                  <span class="result-detail-label">Manufacturer</span>
+                  <span class="result-detail-value">${med.manufacturer}</span>
+                </div>
+                <div class="result-detail-row">
+                  <span class="result-detail-label">Dosage Form</span>
+                  <span class="result-detail-value">${med.dosageForm}</span>
+                </div>
+                <div class="result-detail-row">
+                  <span class="result-detail-label">Strength</span>
+                  <span class="result-detail-value">${med.strength}</span>
+                </div>
+                <div class="result-detail-row">
+                  <span class="result-detail-label">Therapeutic Category</span>
+                  <span class="result-detail-value">${med.category}</span>
+                </div>
+              </div>
+
+              <div class="col-md-6">
+                <h5 class="fw-bold text-navy mb-3"><i class="fas fa-balance-scale text-success me-2"></i>Regulatory Information</h5>
+                <div class="result-detail-row">
+                  <span class="result-detail-label">Registration Status</span>
+                  <span class="status-pill ${med.registrationStatus === 'REGISTERED' ? 'registered' : 'review'}">${med.registrationStatus}</span>
+                </div>
+                <div class="result-detail-row">
+                  <span class="result-detail-label">DGDA DAR Reference No</span>
+                  <span class="result-detail-value font-monospace">${med.registrationNumber}</span>
+                </div>
+                <div class="result-detail-row">
+                  <span class="result-detail-label">Barcode / GTIN</span>
+                  <span class="result-detail-value font-monospace">${med.barcode || 'N/A'}</span>
+                </div>
+                <div class="result-detail-row">
+                  <span class="result-detail-label">Data Source</span>
+                  <span class="result-detail-value">MedCheck BD Verified Registry</span>
+                </div>
+                <div class="result-detail-row">
+                  <span class="result-detail-label">Last Updated</span>
+                  <span class="result-detail-value">${formatDate(med.updatedAt)}</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Description / Clinical Info -->
+            <div class="p-3 bg-light rounded-3 mb-4">
+              <h6 class="fw-bold text-navy mb-2"><i class="fas fa-info-circle text-primary me-2"></i>Indications & Overview</h6>
+              <p class="small text-secondary mb-0">
+                ${med.description || 'Standard therapeutic product used under clinical direction by licensed healthcare practitioners.'}
+              </p>
+            </div>
+
+            <!-- Batch Registry Table -->
+            <div class="mb-4">
+              <h5 class="fw-bold text-navy mb-3"><i class="fas fa-boxes text-primary me-2"></i>Registered Batches & Expiry Dates</h5>
+              <div class="table-responsive">
+                <table class="table table-custom align-middle">
+                  <thead>
+                    <tr>
+                      <th>Batch Number</th>
+                      <th>Mfg Date</th>
+                      <th>Exp Date</th>
+                      <th>Batch Status</th>
+                      <th>Audit History</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    ${batchesRows}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <!-- Actions -->
+            <div class="d-flex flex-wrap gap-2 pt-3 border-top justify-content-between align-items-center">
+              <div class="d-flex gap-2">
+                <a href="price.html?medicine=${encodeURIComponent(med.name)}" class="btn btn-primary-custom btn-sm">
+                  <i class="fas fa-tags me-1"></i> Compare Pharmacy Prices
+                </a>
+                <a href="pharmacies.html?medicine=${encodeURIComponent(med.name)}" class="btn btn-outline-primary btn-sm">
+                  <i class="fas fa-store me-1"></i> Locate In Pharmacies
+                </a>
+              </div>
+              <a href="report.html?medicine=${encodeURIComponent(med.name)}" class="btn btn-outline-danger btn-sm">
+                <i class="fas fa-flag me-1"></i> Report a Suspicious Medicine
+              </a>
+            </div>
+          </div>
+        `;
+      } catch (err) {
+        container.innerHTML = `<div class="alert alert-danger">${err.message}</div>`;
+      }
+    });
+  </script>
+</body>
+</html>

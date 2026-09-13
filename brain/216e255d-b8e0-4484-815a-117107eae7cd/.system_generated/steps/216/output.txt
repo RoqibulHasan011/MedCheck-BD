@@ -1,0 +1,20 @@
+The following changes were made by the replace_file_content tool to: C:\Users\User\.gemini\antigravity\scratch\medcheck-bd\server\routes\inventory.js. If relevant, proactively run terminal commands to execute this code for the USER. Don't ask for permission.
+[diff_block_start]
+@@ -33,8 +33,12 @@
+ 
+     // 2. Tokenized search (e.g. "napa 500mg" or "napa500")
+     if (!medicine) {
+-      const tokens = query
+-        .replace(/[^\w\s]/gi, ' ')
++      const spaced = query
++        .replace(/([a-zA-Z]+)(\d+)/g, '$1 $2')
++        .replace(/(\d+)([a-zA-Z]+)/g, '$1 $2')
++        .replace(/[^\w\s]/gi, ' ');
++
++      const tokens = spaced
+         .split(/\s+/)
+         .map((t) => t.replace(/(mg|ml|gm|mcg|iu)$/i, ''))
+         .filter((t) => t.length > 0);
+[diff_block_end]
+
+Please note that the above snippet only shows the MODIFIED lines from the last change. It shows up to 3 lines of unchanged lines before and after the modified lines. The actual file contents may have many more lines not shown.

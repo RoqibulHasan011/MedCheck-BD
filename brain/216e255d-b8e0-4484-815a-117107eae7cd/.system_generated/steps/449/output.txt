@@ -1,0 +1,36 @@
+The following changes were made by the replace_file_content tool to: C:\Users\User\.gemini\antigravity\scratch\medcheck-bd\client\pharmacies.html. If relevant, proactively run terminal commands to execute this code for the USER. Don't ask for permission.
+[diff_block_start]
+@@ -48,7 +48,7 @@
+           <div class="col-md-4">
+             <label class="form-label fw-bold text-navy small">Filter by Available Medicine</label>
+             <div class="input-group">
+-              <span class="input-group-text bg-white"><i class="fas fa-pills text-muted"></i></span>
++              <span class="input-group-text bg-white"><i class="fas fa-pills text-primary"></i></span>
+               <input
+                 type="text"
+                 id="filterMedicine"
+@@ -55,5 +55,4 @@
+                 placeholder="e.g. Napa, Seclo, Ace..."
+-                onkeyup="if(event.key==='Enter') loadPharmacies()"
+               >
+             </div>
+           </div>
+@@ -60,6 +60,7 @@
+           <div class="col-md-4">
+             <label class="form-label fw-bold text-navy small">Search Pharmacy Name</label>
+             <div class="input-group">
++              <span class="input-group-text bg-white"><i class="fas fa-clinic-medical text-primary"></i></span>
+               <input
+                 type="text"
+                 id="searchPharmacy"
+@@ -66,6 +66,6 @@
+                 placeholder="e.g. MedCare, Lazz Pharma..."
+               >
+-              <button class="btn btn-primary-custom" type="button" onclick="loadPharmacies()">
++              <button class="btn btn-primary-custom px-3" type="button" onclick="loadPharmacies()" title="Search Pharmacy">
+                 <i class="fas fa-search"></i>
+               </button>
+             </div>
+[diff_block_end]
+
+Please note that the above snippet only shows the MODIFIED lines from the last change. It shows up to 3 lines of unchanged lines before and after the modified lines. The actual file contents may have many more lines not shown.

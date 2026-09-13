@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Medicine History - MedCheck BD</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="bg-light">
+
+  <!-- Dynamic Navbar -->
+  <div id="mainNavbar"></div>
+
+  <main class="py-5">
+    <div class="container">
+      <!-- Breadcrumb -->
+      <nav aria-label="breadcrumb" class="mb-4">
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+          <li class="breadcrumb-item"><a href="customer-dashboard.html">Dashboard</a></li>
+          <li class="breadcrumb-item active" aria-current="page">Medicine History</li>
+        </ol>
+      </nav>
+
+      <!-- Auth Notice Banner if session expired or guest -->
+      <div id="historyAuthNotice" style="display: none;" class="mb-4"></div>
+
+      <div class="card-custom p-4 bg-white mb-4">
+        <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-3">
+          <div>
+            <h3 class="fw-bold text-navy mb-1"><i class="fas fa-history text-primary me-2"></i>My Medicine History</h3>
+            <p class="text-muted small mb-0">Record of verified medicines and pharmacy purchases linked to your account.</p>
+          </div>
+          <div class="d-flex flex-wrap gap-2 align-items-center">
+            <select id="historyFilter" class="form-select form-select-sm" style="min-width: 170px;" onchange="loadCustomerHistory()">
+              <option value="ALL">All Records</option>
+              <option value="VERIFICATION">Verifications Only</option>
+              <option value="PURCHASE">Purchases Only</option>
+            </select>
+            <button class="btn btn-outline-danger btn-sm" onclick="clearAllHistory()">
+              <i class="fas fa-trash me-1"></i> Clear History
+            </button>
+          </div>
+        </div>
+
+        <div class="table-responsive">
+          <table class="table table-custom align-middle mb-0">
+            <thead>
+              <tr>
+                <th>Medicine & Generic</th>
+                <th>Manufacturer</th>
+                <th>Batch Number</th>
+                <th>Activity Type</th>
+                <th>Status</th>
+                <th>Pharmacy / Source</th>
+                <th>Date</th>
+                <th class="text-end">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="historyTableBody">
+              <tr><td colspan="8" class="text-center py-4 text-muted"><div class="spinner-border spinner-border-sm text-primary me-2" role="status"></div>Loading your history records...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Dynamic Footer -->
+  <div id="mainFooter"></div>
+
+  <!-- Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="js/main.js"></script>
+  <script src="js/auth.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      loadCustomerHistory();
+    });
+
+    // Helper: 1-click login for demo customer account
+    async function quickLoginDemoCustomer() {
+      try {
+        const res = await fetch('/api/auth/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            email: 'customer@gmail.com',
+            password: 'Customer@123'
+          }),
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.message || 'Login failed');
+
+        localStorage.setItem('token', data.token);
+        localStorage.setItem('user', JSON.stringify(data.user));
+        showToast('Logged in as Demo Customer (customer@gmail.com)', 'success');
+        
+        const banner = document.getElementById('historyAuthNotice');
+        if (banner) banner.style.display = 'none';
+        
+        renderNavbar();
+        loadCustomerHistory();
+      } catch (err) {
+        showToast('Login failed: ' + err.message, 'danger');
+      }
+    }
+
+    async function loadCustomerHistory() {
+      const type = document.getElementById('historyFilter') ? document.getElementById('historyFilter').value : 'ALL';
+      const tableBody = document.getElementById('historyTableBody');
+      const authNotice = document.getElementById('historyAuthNotice');
+      if (!tableBody) return;
+
+      tableBody.innerHTML = `
+        <tr>
+          <td colspan="8" class="text-center py-4 text-muted">
+            <div class="spinner-border spinner-border-sm text-primary me-2" role="status"></div>
+            Loading your history records...
+          </td>
+        </tr>
+      `;
+
+      let serverItems = [];
+      let token = localStorage.getItem('token');
+      let user = JSON.parse(localStorage.getItem('user') || 'null');
+
+      if (token) {
+        try {
+          const res = await fetch(`/api/history?type=${encodeURIComponent(type)}`, {
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${token}`
+            }
+          });
+
+          if (res.status === 401) {
+            // Token expired or invalidated
+            localStorage.removeItem('token');
+            if (authNotice) {
+              authNotice.style.display = 'block';
+              authNotice.innerHTML = `
+                <div class="alert alert-warning d-flex flex-wrap align-items-center justify-content-between p-3 border-0 shadow-sm" style="border-radius: 12px;">
+                  <div class="d-flex align-items-center gap-2">
+                    <i class="fas fa-exclamation-circle fa-lg text-warning"></i>
+                    <span>Your customer demo session has expired. Re-authenticate to access full cloud sync records.</span>
+                  </div>
+                  <button class="btn btn-primary-custom btn-sm" onclick="quickLoginDemoCustomer()">
+                    <i class="fas fa-sign-in-alt me-1"></i> Connect Demo Customer Account
+                  </button>
+                </div>
+              `;
+            }
+          } else if (res.ok) {
+            const data = await res.json();
+            serverItems = data.data || [];
+            if (authNotice) authNotice.style.display = 'none';
+          }
+        } catch (fetchErr) {
+          console.warn('[History Fetch Error]', fetchErr);
+        }
+      } else {
+        // Not logged in
+        if (authNotice) {
+          authNotice.style.display = 'block';
+          authNotice.innerHTML = `
+            <div class="alert alert-info d-flex flex-wrap align-items-center justify-content-between p-3 border-0 shadow-sm" style="border-radius: 12px;">
+              <div class="d-flex align-items-center gap-2">
+                <i class="fas fa-info-circle fa-lg text-primary"></i>
+                <span>Showing recent local device history. Sign in to sync your verified purchases across devices.</span>
+              </div>
+              <button class="btn btn-primary-custom btn-sm" onclick="quickLoginDemoCustomer()">
+                <i class="fas fa-sign-in-alt me-1"></i> Demo Customer Sign In
+              </button>
+            </div>
+          `;
+        }
+      }
+
+      // Merge local browser history for anything not already on server
+      const localItems = typeof getLocalHistory === 'function' ? getLocalHistory() : [];
+      let combined = [...serverItems];
+
+      // Add unique local items
+      localItems.forEach(localItem => {
+        const matchesFilter = type === 'ALL' || localItem.type === type;
+        if (!matchesFilter) return;
+
+        const existsOnServer = serverItems.some(s => 
+          s.medicineName?.toLowerCase() === localItem.medicineName?.toLowerCase() &&
+          s.type === localItem.type &&
+          Math.abs(new Date(s.checkedAt) - new Date(localItem.checkedAt)) < 15000
+        );
+
+        if (!existsOnServer) {
+          combined.push(localItem);
+        }
+      });
+
+      // Filter by type
+      if (type !== 'ALL') {
+        combined = combined.filter(item => item.type === type);
+      }
+
+      // Sort newest first
+      combined.sort((a, b) => new Date(b.checkedAt) - new Date(a.checkedAt));
+
+      // Handle Empty States
+      if (combined.length === 0) {
+        renderEmptyHistoryState(tableBody, type);
+        return;
+      }
+
+      // Render Table Rows
+      tableBody.innerHTML = combined.map(item => {
+        // Extract receipt ID if present
+        let receiptId = null;
+        if (item.notes) {
+          const match = item.notes.match(/(MC-2026-\d+)/i);
+          if (match) receiptId = match[1];
+        }
+
+        const isPurchase = item.type === 'PURCHASE';
+        const typeBadge = isPurchase
+          ? '<span class="badge bg-success"><i class="fas fa-shopping-cart me-1"></i>PURCHASE</span>'
+          : '<span class="badge bg-primary"><i class="fas fa-shield-alt me-1"></i>VERIFIED</span>';
+
+        let statusClass = 'match';
+        if (item.verificationStatus === 'NEEDS REVIEW') statusClass = 'review';
+        else if (item.verificationStatus === 'ALERT DETECTED' || item.verificationStatus === 'SUSPENDED') statusClass = 'alert';
+        else if (item.verificationStatus === 'PURCHASED') statusClass = 'instock';
+
+        const medId = item.medicineId?._id || item.medicineId;
+
+        return `
+          <tr>
+            <td>
+              <strong class="text-navy">${item.medicineName || 'Medicine'}</strong>
+              <div class="small text-muted">${item.genericName || ''}</div>
+            </td>
+            <td class="small">${item.manufacturer || 'N/A'}</td>
+            <td class="font-monospace small">${item.batchNumber || 'N/A'}</td>
+            <td>${typeBadge}</td>
+            <td>
+              <span class="status-pill ${statusClass}">
+                <i class="fas ${isPurchase ? 'fa-check' : 'fa-check-circle'} me-1"></i>${item.verificationStatus || (isPurchase ? 'PURCHASED' : 'MATCH')}
+              </span>
+            </td>
+            <td>
+              <span class="small fw-semibold text-secondary">
+                ${item.pharmacyName ? `<i class="fas fa-clinic-medical text-success me-1"></i>${item.pharmacyName}` : '<span class="text-muted">MedCheck BD Search</span>'}
+              </span>
+            </td>
+            <td class="small text-muted">${formatDate(item.checkedAt)}</td>
+            <td class="text-end text-nowrap">
+              ${receiptId ? `
+                <a href="receipt.html?id=${encodeURIComponent(receiptId)}" class="btn btn-outline-success btn-sm py-0 px-2 me-1" title="View Printable Digital Receipt">
+                  <i class="fas fa-receipt me-1"></i>Receipt
+                </a>
+              ` : ''}
+              ${medId ? `
+                <a href="medicine-details.html?id=${medId}" class="btn btn-outline-primary btn-sm py-0 px-2 me-1" title="View Medicine Details">
+                  Details
+                </a>
+              ` : ''}
+              <button class="btn btn-outline-danger btn-sm py-0 px-2" title="Delete entry" onclick="deleteHistoryItem('${item._id}', ${item.isLocal ? 'true' : 'false'})">
+                <i class="fas fa-trash-alt"></i>
+              </button>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    function renderEmptyHistoryState(container, type) {
+      if (type === 'PURCHASE') {
+        container.innerHTML = `
+          <tr>
+            <td colspan="8" class="text-center py-5">
+              <i class="fas fa-shopping-bag fa-3x mb-3 text-muted opacity-50"></i>
+              <h5 class="fw-bold text-navy">No Purchase History Found</h5>
+              <p class="text-muted small mb-3">You haven't ordered any medicines online yet. Browse our verified pharmacy directory to order directly.</p>
+              <a href="pharmacies.html" class="btn btn-primary-custom btn-sm">
+                <i class="fas fa-clinic-medical me-1"></i> Browse Verified Pharmacies
+              </a>
+            </td>
+          </tr>
+        `;
+      } else if (type === 'VERIFICATION') {
+        container.innerHTML = `
+          <tr>
+            <td colspan="8" class="text-center py-5">
+              <i class="fas fa-shield-alt fa-3x mb-3 text-muted opacity-50"></i>
+              <h5 class="fw-bold text-navy">No Verification Records Found</h5>
+              <p class="text-muted small mb-3">You haven't scanned or verified any medicine batches yet.</p>
+              <a href="verify.html" class="btn btn-primary-custom btn-sm">
+                <i class="fas fa-search me-1"></i> Verify Medicine Now
+              </a>
+            </td>
+          </tr>
+        `;
+      } else {
+        container.innerHTML = `
+          <tr>
+            <td colspan="8" class="text-center py-5">
+              <i class="fas fa-history fa-3x mb-3 text-muted opacity-50"></i>
+              <h5 class="fw-bold text-navy">No Medicine History Records Found</h5>
+              <p class="text-muted small mb-3">Your verified medicine scans and pharmacy purchases will be saved here automatically.</p>
+              <div class="d-flex justify-content-center gap-2">
+                <a href="verify.html" class="btn btn-primary-custom btn-sm">
+                  <i class="fas fa-search me-1"></i> Verify Medicine
+                </a>
+                <a href="pharmacies.html" class="btn btn-outline-primary btn-sm">
+                  <i class="fas fa-clinic-medical me-1"></i> Order from Pharmacy
+                </a>
+              </div>
+            </td>
+          </tr>
+        `;
+      }
+    }
+
+    async function deleteHistoryItem(id, isLocal = false) {
+      if (isLocal || id.startsWith('local_')) {
+        if (typeof removeLocalHistoryItem === 'function') {
+          removeLocalHistoryItem(id);
+        }
+        showToast('Local record deleted', 'info');
+        loadCustomerHistory();
+        return;
+      }
+
+      try {
+        const token = localStorage.getItem('token');
+        const res = await fetch(`/api/history/${id}`, {
+          method: 'DELETE',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`
+          },
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.message);
+
+        showToast('Record deleted from history', 'info');
+        loadCustomerHistory();
+      } catch (err) {
+        showToast(err.message, 'danger');
+      }
+    }
+
+    async function clearAllHistory() {
+      if (!confirm('Are you sure you want to clear your entire medicine history?')) return;
+
+      if (typeof clearLocalHistory === 'function') {
+        clearLocalHistory();
+      }
+
+      const token = localStorage.getItem('token');
+      if (token) {
+        try {
+          const res = await fetch('/api/history', {
+            method: 'DELETE',
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${token}`
+            },
+          });
+          const data = await res.json();
+          if (!res.ok) throw new Error(data.message);
+        } catch (err) {
+          console.warn('[Server History Clear Warning]', err.message);
+        }
+      }
+
+      showToast('History cleared successfully', 'info');
+      loadCustomerHistory();
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,10 @@
+
+The command exited with code 0.
+Output:
+
+              <div class="input-group">
+>               <span class="input-group-text bg-white"><i class="fas fa-clinic-medical text-primary"></i></span>
+                <input
+
+
+

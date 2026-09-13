@@ -1,0 +1,31 @@
+The following changes were made by the replace_file_content tool to: C:\Users\User\.gemini\antigravity\scratch\medcheck-bd\client\price.html. If relevant, proactively run terminal commands to execute this code for the USER. Don't ask for permission.
+[diff_block_start]
+@@ -173,9 +173,22 @@
+                   </span>
+                 </td>
+                 <td class="small text-muted">${formatDate(item.updatedAt)}</td>
+-                <td class="text-end">
+-                  <a href="pharmacy-details.html?id=${item.pharmacy.id}" class="btn btn-outline-primary btn-sm py-1">
+-                    View Stock
++                <td class="text-end text-nowrap">
++                  <button class="btn btn-primary-custom btn-sm py-1 px-2 me-1" onclick='openCustomerOrderModal(${JSON.stringify({
++                    medicineId: medicine.id,
++                    medicineName: medicine.name,
++                    genericName: medicine.genericName,
++                    dosageForm: medicine.dosageForm,
++                    strength: medicine.strength,
++                    price: item.price,
++                    pharmacyId: item.pharmacy.id,
++                    pharmacyName: item.pharmacy.name,
++                    pharmacyArea: item.pharmacy.area
++                  }).replace(/'/g, "&apos;")})'>
++                    <i class="fas fa-shopping-cart me-1"></i>Order
++                  </button>
++                  <a href="pharmacy-details.html?id=${item.pharmacy.id}" class="btn btn-outline-secondary btn-sm py-1 px-2">
++                    Details
+                   </a>
+                 </td>
+               </tr>
+[diff_block_end]
+
+Please note that the above snippet only shows the MODIFIED lines from the last change. It shows up to 3 lines of unchanged lines before and after the modified lines. The actual file contents may have many more lines not shown.

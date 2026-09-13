@@ -1,0 +1,12 @@
+
+The command exited with code 0.
+Output:
+
+  /* Fix when autocomplete-wrapper is placed inside Bootstrap .input-group */
+  .input-group {
+>   flex-wrap: nowrap !important;
+  }
+  
+
+
+

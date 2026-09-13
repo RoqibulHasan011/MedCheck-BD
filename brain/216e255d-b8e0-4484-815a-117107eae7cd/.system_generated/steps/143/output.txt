@@ -1,0 +1,49 @@
+
+The command exited with code 0.
+Output:
+====================================================
+ Starting MedCheck BD Automated Integration Tests
+====================================================
+
+[Test 1] Testing Database Connection...
+[Database] Attempting connection to MongoDB at: mongodb://127.0.0.1:27017/medcheck_bd
+[Database] Connected successfully to live MongoDB: 127.0.0.1
+ PASS: Database connected successfully.
+
+[Test 2] Testing Database Seeder...
+[Seed] Starting database cleanup and seeding...
+[Seed] Cleared existing collections.
+[Seed] Created default users (Admin, Pharmacy, Customer).
+[Seed] Created 22 verified medicines.
+[Seed] Created 47 medicine batches.
+[Seed] Created 10 pharmacies across Bangladesh.
+[Seed] Created 47 inventory records with dynamic price variances.
+[Seed] Created sample digital sale receipt: MC-2026-784102
+[Seed] Database successfully seeded with 100% Bangladesh demo dataset!
+ Users: 5, Medicines: 22, Batches: 47, Pharmacies: 10, Inventory: 47
+ PASS: Database seeded with complete Bangladesh dataset.
+
+[Test 3] Testing Authentication & Password Hashing...
+ PASS: Password hashing & bcrypt verification working as expected.
+
+[Test 4] Testing Medicine Verification Engine...
+ Napa batch NAPA-2026-01 computed status: VALID
+ Napa batch NAPA-OLD-99 computed status: EXPIRED
+ PASS: Medicine & Batch verification engine working correctly.
+
+[Test 5] Testing POS Sale & Stock Deduction...
+ Created test sale receipt: MC-TEST-9999, Quantity deducted: 2
+ PASS: Inventory deduction and digital sale generation working.
+
+[Test 6] Testing Customer Medicine Report...
+ Report registered: RPT-TEST-0001 (Pending Review)
+ PASS: Customer report submission registered.
+
+[Test 7] Testing Medical Security Access Logging...
+ Total access audit logs recorded: 4
+ PASS: Audit logging engine working.
+
+====================================================
+ ALL 7 INTEGRATION TESTS PASSED WITH 100% SUCCESS!
+====================================================
+

@@ -1,0 +1,13 @@
+
+The command exited with code 0.
+Output:
+/api/medicines/suggestions?q=na -> count: 8
+/api/medicines/suggestions?q=pan -> count: 2
+/api/verify/panadol -> matchFound: true
+/api/verify/flagyl -> matchFound: true
+/api/verify/ciprocin -> matchFound: true
+/api/verify/napa%20500mg -> matchFound: true
+/api/verify/napa500 -> matchFound: false
+/api/verify/seclo20 -> matchFound: false
+/api/verify/unknownbrand -> matchFound: false
+

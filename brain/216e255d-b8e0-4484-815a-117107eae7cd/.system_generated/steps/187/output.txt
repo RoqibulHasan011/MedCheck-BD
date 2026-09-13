@@ -1,0 +1,55 @@
+The following changes were made by the replace_file_content tool to: C:\Users\User\.gemini\antigravity\scratch\medcheck-bd\server\routes\inventory.js. If relevant, proactively run terminal commands to execute this code for the USER. Don't ask for permission.
+[diff_block_start]
+@@ -23,8 +23,8 @@
+       return res.status(400).json({ success: false, message: 'Please provide a medicine name to compare prices' });
+     }
+ 
+-    // Find medicine
+-    const medicine = await Medicine.findOne({
++    // 1. Direct search
++    let medicine = await Medicine.findOne({
+       $or: [
+         { name: { $regex: query.trim(), $options: 'i' } },
+         { genericName: { $regex: query.trim(), $options: 'i' } },
+@@ -31,10 +31,36 @@
+     });
+ 
+-    if (!medicine) {
++    // 2. Tokenized search (e.g. "napa 500mg" or "napa500")
++    if (!medicine) {
++      const tokens = query
++        .replace(/[^\w\s]/gi, ' ')
++        .split(/\s+/)
++        .map((t) => t.replace(/(mg|ml|gm|mcg|iu)$/i, ''))
++        .filter((t) => t.length > 0);
++
++      if (tokens.length > 0) {
++        const tokenRegexes = tokens.map((t) => new RegExp(t, 'i'));
++        medicine = await Medicine.findOne({
++          $and: tokenRegexes.map((r) => ({
++            $or: [{ name: r }, { genericName: r }, { strength: r }, { manufacturer: r }],
++          })),
++        });
++
++        if (!medicine && tokens[0].length >= 3) {
++          medicine = await Medicine.findOne({
++            $or: [{ name: new RegExp(tokens[0], 'i') }, { genericName: new RegExp(tokens[0], 'i') }],
++          });
++        }
++      }
++    }
++
++    if (!medicine) {
++      const suggestions = await Medicine.find().limit(4).select('name genericName referencePrice');
+       return res.json({
+         success: true,
+         matchFound: false,
+-        message: 'No medicine found matching this name in the database',
++        message: `No medicine found matching "${query}" in the reference database`,
++        suggestions,
+         data: [],
+       });
+     }
+[diff_block_end]
+
+Please note that the above snippet only shows the MODIFIED lines from the last change. It shows up to 3 lines of unchanged lines before and after the modified lines. The actual file contents may have many more lines not shown.

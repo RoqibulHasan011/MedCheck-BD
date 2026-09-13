@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Medicine Price Check - MedCheck BD</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- Dynamic Navbar -->
+  <div id="mainNavbar"></div>
+
+  <main class="py-5">
+    <div class="container">
+      <!-- Header -->
+      <div class="text-center max-w-700 mx-auto mb-5">
+        <span class="badge bg-success bg-opacity-10 text-success fw-bold text-uppercase px-3 py-2 rounded-pill mb-2">
+          <i class="fas fa-coins me-1"></i> Fair Retail Pricing & Transparency
+        </span>
+        <h1 class="fw-bold text-navy">Medicine Price Check</h1>
+        <p class="text-muted">
+          Compare verified pharmacy retail rates against official DGDA reference prices. Find the lowest cost options in your neighborhood.
+        </p>
+      </div>
+
+      <!-- Search Box -->
+      <div class="card-custom p-4 mb-5 mx-auto" style="max-width: 800px;">
+        <form onsubmit="handlePriceSearch(event)">
+          <label class="form-label fw-bold text-navy">Search Medicine for Price Comparison</label>
+          <div class="input-group input-group-lg shadow-sm">
+            <span class="input-group-text bg-white border-end-0 text-muted"><i class="fas fa-tags"></i></span>
+            <input
+              type="text"
+              id="priceSearchInput"
+              class="form-control border-start-0 ps-0"
+              placeholder="e.g. Napa 500 mg, Seclo 20 mg, Maxpro 20 mg..."
+              required
+            >
+            <button class="btn btn-primary-custom px-4" type="submit" id="priceSearchBtn">
+              <i class="fas fa-search me-2"></i>Check Prices
+            </button>
+          </div>
+          <div class="small text-muted mt-2">
+            <i class="fas fa-lightbulb text-warning me-1"></i> Suggestions:
+            <a href="javascript:void(0)" onclick="searchPriceFor('Napa 500 mg')" class="text-decoration-none me-2">Napa 500 mg</a>
+            <a href="javascript:void(0)" onclick="searchPriceFor('Seclo 20 mg')" class="text-decoration-none me-2">Seclo 20 mg</a>
+            <a href="javascript:void(0)" onclick="searchPriceFor('Maxpro 20 mg')" class="text-decoration-none me-2">Maxpro 20 mg</a>
+            <a href="javascript:void(0)" onclick="searchPriceFor('Ace Plus')" class="text-decoration-none">Ace Plus</a>
+          </div>
+        </form>
+      </div>
+
+      <!-- Price Comparison Results Area -->
+      <div id="priceComparisonArea" class="mx-auto" style="max-width: 960px;">
+        <div class="text-center py-5 bg-white rounded-4 border p-4 shadow-sm">
+          <div class="text-success opacity-75 mb-3">
+            <i class="fas fa-chart-line fa-3x"></i>
+          </div>
+          <h5 class="fw-bold text-navy">Search Any Medicine to Compare Prices</h5>
+          <p class="text-muted small max-w-500 mx-auto">
+            Discover which pharmacies in Dhaka, Dhanmondi, Mirpur, Uttara and divisional hubs offer the best rates within official DGDA guidelines.
+          </p>
+        </div>
+      </div>
+
+      <!-- Disclaimer -->
+      <div class="alert alert-light border text-muted small mt-5 mx-auto" style="max-width: 960px;">
+        <i class="fas fa-info-circle text-primary me-2"></i>
+        <strong>Price Disclaimer:</strong> Prices may vary by pharmacy and location. Displayed prices reflect live inventory data submitted by registered pharmacies and reference/demo benchmarks. Always request a printed receipt from your dispensing pharmacy.
+      </div>
+    </div>
+  </main>
+
+  <!-- Dynamic Footer -->
+  <div id="mainFooter"></div>
+
+  <!-- Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="js/main.js"></script>
+  <script src="js/auth.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const urlParams = new URLSearchParams(window.location.search);
+      const medicine = urlParams.get('medicine');
+      if (medicine) {
+        const input = document.getElementById('priceSearchInput');
+        if (input) input.value = decodeURIComponent(medicine);
+        executePriceCheck(medicine);
+      }
+
+      setupMedicineAutocomplete('priceSearchInput', (name) => {
+        executePriceCheck(name);
+      });
+    });
+
+    function searchPriceFor(name) {
+      document.getElementById('priceSearchInput').value = name;
+      executePriceCheck(name);
+    }
+
+    function handlePriceSearch(e) {
+      e.preventDefault();
+      const query = document.getElementById('priceSearchInput').value.trim();
+      if (!query) return;
+      executePriceCheck(query);
+    }
+
+    async function executePriceCheck(query) {
+      const container = document.getElementById('priceComparisonArea');
+      const searchBtn = document.getElementById('priceSearchBtn');
+
+      if (searchBtn) {
+        searchBtn.disabled = true;
+        searchBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Searching...';
+      }
+
+      container.innerHTML = `
+        <div class="text-center py-5">
+          <div class="spinner-border text-primary" role="status"></div>
+          <p class="text-muted mt-2">Checking prices across verified pharmacies...</p>
+        </div>
+      `;
+
+      try {
+        const res = await fetch(`/api/inventory/compare?query=${encodeURIComponent(query)}`);
+        const data = await res.json();
+
+        if (!data.success || !data.matchFound) {
+          container.innerHTML = `
+            <div class="alert alert-warning border-0 p-4 shadow-sm text-center">
+              <i class="fas fa-exclamation-triangle fa-2x mb-2 text-warning"></i>
+              <h5 class="fw-bold">No Medicine Found</h5>
+              <p class="text-muted mb-0">No matching medicine found for "${query}". Try searching for popular brands like Napa, Seclo, or Maxpro.</p>
+            </div>
+          `;
+          return;
+        }
+
+        const { medicine, lowestPrice, data: items } = data;
+
+        let rowsHtml = '<tr><td colspan="6" class="text-center py-4 text-muted">No pharmacies have listed current inventory for this medicine yet.</td></tr>';
+        if (items && items.length > 0) {
+          rowsHtml = items.map(item => {
+            const isLowest = item.price === lowestPrice;
+            const diff = item.priceDifference;
+            let diffBadge = '<span class="badge bg-secondary">Matches Ref</span>';
+            if (diff > 0) {
+              diffBadge = `<span class="badge bg-danger-subtle text-danger border border-danger-subtle">+৳${diff.toFixed(2)} (+${item.priceDifferencePercentage}%)</span>`;
+            } else if (diff < 0) {
+              diffBadge = `<span class="badge bg-success-subtle text-success border border-success-subtle">-৳${Math.abs(diff).toFixed(2)} (${item.priceDifferencePercentage}%)</span>`;
+            }
+
+            return `
+              <tr class="${isLowest ? 'table-success bg-opacity-25' : ''}">
+                <td>
+                  <a href="pharmacy-details.html?id=${item.pharmacy.id}" class="fw-bold text-dark text-decoration-none">
+                    ${item.pharmacy.name}
+                  </a>
+                  ${item.pharmacy.verified ? '<i class="fas fa-check-circle text-success small ms-1" title="Verified Pharmacy"></i>' : ''}
+                  <div class="small text-muted"><i class="fas fa-map-marker-alt text-danger me-1"></i>${item.pharmacy.area}</div>
+                </td>
+                <td>
+                  <span class="fs-5 fw-bold text-navy">${formatBDT(item.price)}</span>
+                  ${isLowest ? '<span class="badge bg-success ms-2"><i class="fas fa-star me-1"></i>Lowest Price</span>' : ''}
+                </td>
+                <td>${diffBadge}</td>
+                <td>
+                  <span class="badge ${item.status === 'Available' ? 'bg-success' : (item.status === 'Low Stock' ? 'bg-warning text-dark' : 'bg-danger')}">
+                    ${item.status}
+                  </span>
+                </td>
+                <td class="small text-muted">${formatDate(item.updatedAt)}</td>
+                <td class="text-end text-nowrap">
+                  <button class="btn btn-primary-custom btn-sm py-1 px-2 me-1" onclick='openCustomerOrderModal(${JSON.stringify({
+                    medicineId: medicine.id,
+                    medicineName: medicine.name,
+                    genericName: medicine.genericName,
+                    dosageForm: medicine.dosageForm,
+                    strength: medicine.strength,
+                    price: item.price,
+                    pharmacyId: item.pharmacy.id,
+                    pharmacyName: item.pharmacy.name,
+                    pharmacyArea: item.pharmacy.area
+                  }).replace(/'/g, "&apos;")})'>
+                    <i class="fas fa-shopping-cart me-1"></i>Order
+                  </button>
+                  <a href="pharmacy-details.html?id=${item.pharmacy.id}" class="btn btn-outline-secondary btn-sm py-1 px-2">
+                    Details
+                  </a>
+                </td>
+              </tr>
+            `;
+          }).join('');
+        }
+
+        container.innerHTML = `
+          <div class="card-custom p-4 mb-4">
+            <!-- Medicine Info Banner -->
+            <div class="row align-items-center mb-4 border-bottom pb-3 g-3">
+              <div class="col-md-7">
+                <span class="badge bg-primary-subtle text-primary fw-bold text-uppercase mb-1">${medicine.dosageForm}</span>
+                <h3 class="fw-bold text-navy mb-1">${medicine.name}</h3>
+                <div class="text-secondary">${medicine.genericName} • ${medicine.strength}</div>
+                <div class="small text-muted">Manufacturer: <strong>${medicine.manufacturer}</strong></div>
+              </div>
+              <div class="col-md-5 text-md-end">
+                <div class="p-3 bg-light rounded-3 d-inline-block text-start text-md-end">
+                  <div class="small text-muted">DGDA Official Reference Benchmark</div>
+                  <div class="fs-3 fw-bold text-primary">${formatBDT(medicine.referencePrice)}</div>
+                  <div class="small text-success fw-bold">
+                    ${lowestPrice ? `Lowest available in store: ${formatBDT(lowestPrice)}` : ''}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Price Table -->
+            <h5 class="fw-bold text-navy mb-3"><i class="fas fa-store text-primary me-2"></i>Pharmacy Price Comparison</h5>
+            <div class="table-responsive">
+              <table class="table table-custom align-middle mb-0">
+                <thead>
+                  <tr>
+                    <th>Pharmacy & Location</th>
+                    <th>Selling Price</th>
+                    <th>Variance vs Ref</th>
+                    <th>Availability</th>
+                    <th>Updated</th>
+                    <th class="text-end">Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  ${rowsHtml}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        `;
+      } catch (err) {
+        container.innerHTML = `<div class="alert alert-danger">${err.message}</div>`;
+      } finally {
+        if (searchBtn) {
+          searchBtn.disabled = false;
+          searchBtn.innerHTML = '<i class="fas fa-search me-2"></i>Check Prices';
+        }
+      }
+    }
+  </script>
+</body>
+</html>

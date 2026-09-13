@@ -1,0 +1,44 @@
+The following changes were made by the replace_file_content tool to: C:\Users\User\.gemini\antigravity\scratch\medcheck-bd\server\routes\medicines.js. If relevant, proactively run terminal commands to execute this code for the USER. Don't ask for permission.
+[diff_block_start]
+@@ -66,6 +66,38 @@
+   }
+ });
+ 
++// @route   GET /api/medicines/suggestions
++// @desc    Fast search suggestions for autocomplete dropdown
++// @access  Public
++router.get('/suggestions', async (req, res) => {
++  try {
++    const q = (req.query.q || '').trim();
++    if (!q || q.length < 1) {
++      return res.json({ success: true, data: [] });
++    }
++
++    const clean = q.replace(/[^\w\s]/gi, ' ').trim();
++    const tokens = clean.split(/\s+/).filter(t => t.length > 0);
++    const regex = new RegExp(clean.replace(/\s+/g, '.*'), 'i');
++
++    const suggestions = await Medicine.find({
++      $or: [
++        { name: regex },
++        { genericName: regex },
++        { manufacturer: regex },
++        { barcode: regex },
++        { registrationNumber: regex },
++      ],
++    })
++      .select('name genericName strength dosageForm manufacturer referencePrice barcode')
++      .limit(8);
++
++    res.json({ success: true, count: suggestions.length, data: suggestions });
++  } catch (err) {
++    res.status(500).json({ success: false, message: err.message });
++  }
++});
++
+ // @route   GET /api/medicines/:id
+ // @desc    Get single medicine details with active batches and alerts
+ // @access  Public
+[diff_block_end]
+
+Please note that the above snippet only shows the MODIFIED lines from the last change. It shows up to 3 lines of unchanged lines before and after the modified lines. The actual file contents may have many more lines not shown.

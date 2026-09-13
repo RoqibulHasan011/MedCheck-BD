@@ -1,0 +1,25 @@
+The following changes were made by the replace_file_content tool to: C:\Users\User\.gemini\antigravity\scratch\medcheck-bd\client\js\verify.js. If relevant, proactively run terminal commands to execute this code for the USER. Don't ask for permission.
+[diff_block_start]
+@@ -72,6 +72,19 @@
+       return;
+     }
+ 
++    if (typeof saveLocalHistoryItem === 'function' && data.data && data.data.medicine) {
++      saveLocalHistoryItem({
++        medicineId: data.data.medicine.id,
++        medicineName: data.data.medicine.name,
++        genericName: data.data.medicine.genericName,
++        manufacturer: data.data.medicine.manufacturer,
++        batchNumber: data.data.batch ? data.data.batch.batchNumber : 'N/A',
++        verificationStatus: data.verificationStatus || 'DATABASE MATCH',
++        pharmacyName: 'MedCheck BD Verification',
++        type: 'VERIFICATION',
++      });
++    }
++
+     renderMatchResult(data);
+   } catch (err) {
+     resultContainer.innerHTML = `
+[diff_block_end]
+
+Please note that the above snippet only shows the MODIFIED lines from the last change. It shows up to 3 lines of unchanged lines before and after the modified lines. The actual file contents may have many more lines not shown.

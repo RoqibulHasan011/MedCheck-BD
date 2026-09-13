@@ -1,0 +1,12 @@
+
+The command exited with code 0.
+Output:
+panadol -> matchFound: false
+napa -> matchFound: true
+paracetamol -> matchFound: true
+Napa 500 mg -> matchFound: true
+Napa -> matchFound: true
+seclo -> matchFound: true
+Beximco -> matchFound: true
+Square -> matchFound: true
+

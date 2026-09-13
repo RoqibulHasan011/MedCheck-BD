@@ -1,0 +1,4 @@
+
+The command exited with code 0.
+Output:
+{"success":true,"count":3,"data":[{"_id":"6aa30aed2b2ebf79d0106114","name":"MedCare Pharmacy Uttara","phone":"+8801819000022","address":"Sector 3, Jashimuddin Avenue, Uttara","area":"Uttara","division":"Dhaka","verified":true},{"_id":"6aa30aed2b2ebf79d0106112","name":"MedCare Pharmacy Dhanmondi","phone":"+8801819000002","address":"House 42, Road 7/A, Dhanmondi","area":"Dhanmondi","division":"Dhaka","verified":true},{"_id":"6aa30aed2b2ebf79d0106113","name":"MedCare Pharmacy Mirpur","phone":"+8801819000021","address":"Plot 14, Main Road, Section 10, Mirpur","area":"Mirpur","division":"Dhaka","verified":true}]}

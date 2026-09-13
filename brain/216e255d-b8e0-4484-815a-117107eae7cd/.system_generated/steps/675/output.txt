@@ -1,0 +1,9 @@
+
+The command exited with code 0.
+Output:
+Login success: true User: Shakil Mahmud
+Total History count: 5
+Purchase history count: 3
+Verification history count: 2
+Receipt lookup success: true Pharmacy: MedCare Pharmacy Dhanmondi
+

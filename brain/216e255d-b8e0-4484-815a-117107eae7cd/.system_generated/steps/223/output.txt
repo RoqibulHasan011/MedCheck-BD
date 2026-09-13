@@ -1,0 +1,13 @@
+
+The command exited with code 0.
+Output:
+/api/verify/napa500 -> matchFound: true
+/api/verify/seclo20 -> matchFound: true
+/api/verify/panadol -> matchFound: true
+/api/verify/flagyl -> matchFound: true
+/api/verify/ciprocin -> matchFound: true
+/api/verify/histacin -> matchFound: true
+/api/inventory/compare?query=napa500 -> matchFound: true
+/api/inventory/compare?query=seclo20 -> matchFound: true
+/api/inventory/compare?query=flagyl -> matchFound: true
+

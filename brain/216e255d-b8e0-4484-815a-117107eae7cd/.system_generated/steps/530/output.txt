@@ -1,0 +1,158 @@
+The following changes were made by the replace_file_content tool to: C:\Users\User\.gemini\antigravity\scratch\medcheck-bd\server\routes\sales.js. If relevant, proactively run terminal commands to execute this code for the USER. Don't ask for permission.
+[diff_block_start]
+@@ -183,6 +183,152 @@
+   }
+ });
+ 
++// @route   POST /api/sales/customer-order
++// @desc    Direct purchase / online order by customer from a verified pharmacy
++// @access  Public (optionalAuth to link customer account)
++router.post('/customer-order', optionalAuth, async (req, res) => {
++  try {
++    const {
++      pharmacyId,
++      medicineId,
++      batchNumber,
++      quantity = 1,
++      customerName,
++      customerPhone,
++      customerAddress,
++      deliveryType = 'Home Delivery',
++      paymentMethod = 'Cash on Delivery',
++      notes = '',
++    } = req.body;
++
++    if (!pharmacyId || !medicineId) {
++      return res.status(400).json({ success: false, message: 'Pharmacy ID and Medicine ID are required' });
++    }
++
++    const qty = Math.max(1, parseInt(quantity) || 1);
++
++    const pharmacy = await Pharmacy.findById(pharmacyId);
++    if (!pharmacy) {
++      return res.status(404).json({ success: false, message: 'Pharmacy not found' });
++    }
++
++    const medicine = await Medicine.findById(medicineId);
++    if (!medicine) {
++      return res.status(404).json({ success: false, message: 'Medicine not found' });
++    }
++
++    // Find active stock in this pharmacy
++    const invQuery = { pharmacyId: pharmacy._id, medicineId: medicine._id };
++    let batch = null;
++    if (batchNumber) {
++      batch = await Batch.findOne({ medicineId: medicine._id, batchNumber: batchNumber.trim().toUpperCase() });
++      if (batch) invQuery.batchId = batch._id;
++    }
++
++    let invItem = await Inventory.findOne(invQuery);
++    if (!invItem) {
++      // Fallback to any active inventory record for this medicine in this pharmacy
++      invItem = await Inventory.findOne({ pharmacyId: pharmacy._id, medicineId: medicine._id, quantity: { $gt: 0 } });
++    }
++
++    if (!invItem || invItem.quantity <= 0) {
++      return res.status(400).json({
++        success: false,
++        message: `Sorry, ${medicine.name} is currently out of stock at ${pharmacy.name}.`,
++      });
++    }
++
++    if (invItem.quantity < qty) {
++      return res.status(400).json({
++        success: false,
++        message: `Only ${invItem.quantity} units available in stock at ${pharmacy.name}. You requested ${qty}.`,
++      });
++    }
++
++    // Deduct stock
++    invItem.quantity -= qty;
++    await invItem.save();
++
++    const unitPrice = invItem.sellingPrice || medicine.referencePrice;
++    const totalPrice = Number((unitPrice * qty).toFixed(2));
++    const receiptId = generateReceiptId();
++
++    // Determine linked customer account
++    let linkedUser = req.user || null;
++    if (!linkedUser && customerPhone) {
++      linkedUser = await User.findOne({ phone: customerPhone.trim() });
++    }
++
++    const buyerName = customerName || (linkedUser ? linkedUser.name : 'Customer');
++    const buyerPhone = customerPhone || (linkedUser ? linkedUser.phone : '');
++
++    const resolvedBatchNumber = batch ? batch.batchNumber : (invItem.batchId ? 'BATCH-STD' : 'BATCH-ONLINE');
++
++    const sale = await Sale.create({
++      receiptId,
++      pharmacyId: pharmacy._id,
++      customerId: linkedUser ? linkedUser._id : null,
++      customerName: buyerName,
++      customerPhone: buyerPhone,
++      items: [
++        {
++          medicineId: medicine._id,
++          medicineName: medicine.name,
++          genericName: medicine.genericName,
++          batchId: invItem.batchId || (batch ? batch._id : null),
++          batchNumber: resolvedBatchNumber,
++          quantity: qty,
++          unitPrice,
++          totalPrice,
++        },
++      ],
++      subtotal: totalPrice,
++      discount: 0,
++      totalPrice,
++      paymentMethod,
++    });
++
++    // Create entry in MedicineHistory as PURCHASE
++    if (linkedUser) {
++      await MedicineHistory.create({
++        customerId: linkedUser._id,
++        medicineId: medicine._id,
++        medicineName: medicine.name,
++        genericName: medicine.genericName,
++        manufacturer: medicine.manufacturer,
++        batchNumber: resolvedBatchNumber,
++        verificationStatus: 'PURCHASED',
++        pharmacyId: pharmacy._id,
++        pharmacyName: pharmacy.name,
++        type: 'PURCHASE',
++        notes: `Order ${receiptId} (${deliveryType}). Qty: ${qty} units. Payment: ${paymentMethod}. Address: ${customerAddress || 'In-store'}`,
++      });
++    }
++
++    await logAccess({
++      req,
++      action: 'CUSTOMER_PURCHASE',
++      resourceType: 'Sale',
++      resourceId: sale._id,
++      details: `Customer order placed: ${medicine.name} x${qty} from ${pharmacy.name}, Receipt: ${receiptId}`,
++    });
++
++    res.status(201).json({
++      success: true,
++      message: `Order placed successfully! Receipt ${receiptId} generated.`,
++      receiptId,
++      sale,
++      totalPrice,
++      unitPrice,
++      quantity: qty,
++      pharmacyName: pharmacy.name,
++      medicineName: medicine.name,
++    });
++  } catch (err) {
++    res.status(500).json({ success: false, message: err.message });
++  }
++});
++
+ // @route   GET /api/sales/receipt/:receiptId
+ // @desc    Get details for digital receipt rendering
+ // @access  Public (receipts are verifiable with ID)
+[diff_block_end]
+
+Please note that the above snippet only shows the MODIFIED lines from the last change. It shows up to 3 lines of unchanged lines before and after the modified lines. The actual file contents may have many more lines not shown.

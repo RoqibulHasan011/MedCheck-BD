@@ -1,0 +1,4 @@
+
+The command exited with code 0.
+Output:
+{"success":true,"count":1,"data":[{"_id":"6aa2b48825364b42f5e77bf6","name":"MedCare Pharmacy","ownerName":"Mohammad Faruk Hossain","phone":"+8801819000002","email":"pharmacy@medcare.com","address":"House 42, Road 7/A, Dhanmondi","area":"Dhanmondi","division":"Dhaka","licenseNumber":"DL-DHK-2023-4412","verified":true,"status":"Approved","openingHours":"24 Hours","isOpenNow":true,"userId":"6aa2b48725364b42f5e77a51","createdAt":"2026-09-10T13:45:44.099Z","__v":0,"availableSampleMedicines":["Napa One 1000 mg","Napa 500 mg","Napa Extra","Ace Plus","Seclo 20 mg"]}]}

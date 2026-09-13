@@ -1,0 +1,4 @@
+
+The command exited with code 0.
+Output:
+{"success":true,"count":1,"data":[{"_id":"6aa30aed2b2ebf79d010611b","name":"Gulshan Health Mart","ownerName":"Sarah Zaman","phone":"+8801716000009","email":"gulshan@healthmart.com","address":"Gulshan 2 Circle, Road 113","area":"Gulshan","division":"Dhaka","licenseNumber":"DL-DHK-2024-9988","verified":true,"status":"Approved","openingHours":"24 Hours","isOpenNow":true,"userId":"6aa30aed2b2ebf79d0105f71","createdAt":"2026-09-10T19:54:21.739Z","__v":0,"availableSampleMedicines":["Napa 500 mg","Napa Extra","Napa One 1000 mg","Ace Plus","Seclo 20 mg"]}],"fallbackToAllAreas":true,"searchedArea":"Mirpur","message":"No pharmacy matching \"Gulshan\" was found directly in Mirpur. Showing 1 matching branches in other areas."}

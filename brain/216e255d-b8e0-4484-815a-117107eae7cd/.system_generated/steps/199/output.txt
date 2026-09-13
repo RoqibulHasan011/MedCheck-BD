@@ -1,0 +1,15 @@
+
+The command exited with code 0.
+Output:
+[Database] Attempting connection to MongoDB at: mongodb://127.0.0.1:27017/medcheck_bd
+[Database] Connected successfully to live MongoDB: 127.0.0.1
+[Seed] Starting database cleanup and seeding...
+[Seed] Cleared existing collections.
+[Seed] Created default users (Admin, Pharmacy, Customer).
+[Seed] Created 67 verified medicines.
+[Seed] Created 137 medicine batches.
+[Seed] Created 10 pharmacies across Bangladesh.
+[Seed] Created 207 inventory records with dynamic price variances.
+[Seed] Created sample digital sale receipt: MC-2026-784102
+[Seed] Database successfully seeded with 100% Bangladesh demo dataset!
+

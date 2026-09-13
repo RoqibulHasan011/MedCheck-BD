@@ -1,0 +1,4 @@
+{"File":"C:\\Users\\User\\.gemini\\antigravity\\scratch\\medcheck-bd\\client\\pharmacies.html","LineNumber":54,"LineContent":"                id=\"filterMedicine\""}
+{"File":"C:\\Users\\User\\.gemini\\antigravity\\scratch\\medcheck-bd\\client\\pharmacies.html","LineNumber":100,"LineContent":"        const medInput = document.getElementById('filterMedicine');"}
+{"File":"C:\\Users\\User\\.gemini\\antigravity\\scratch\\medcheck-bd\\client\\js\\pharmacy.js","LineNumber":13,"LineContent":"  const medicineInput = document.getElementById('filterMedicine');"}
+{"File":"C:\\Users\\User\\.gemini\\antigravity\\scratch\\medcheck-bd\\client\\js\\pharmacy.js","LineNumber":113,"LineContent":"  const medicineInput = document.getElementById('filterMedicine');"}

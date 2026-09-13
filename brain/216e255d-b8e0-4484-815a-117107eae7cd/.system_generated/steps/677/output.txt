@@ -1,0 +1,31 @@
+
+The command exited with code 0.
+Output:
+Placing test order for: Ace 500 mg at Care & Cure Pharmacy Mohammadpur
+Order result: {
+  success: true,
+  message: 'Order placed successfully! Receipt MC-2026-950708 generated.',
+  receiptId: 'MC-2026-950708',
+  sale: {
+    receiptId: 'MC-2026-950708',
+    pharmacyId: '6aa31316b73e194a084b9383',
+    customerId: '6aa31316b73e194a084b91de',
+    customerName: 'Shakil Mahmud',
+    customerPhone: '01711000003',
+    items: [ [Object] ],
+    subtotal: 2.7,
+    discount: 0,
+    totalPrice: 2.7,
+    paymentMethod: 'Cash on Delivery',
+    _id: '6aa313e47bfb4d9fe64ad5a9',
+    date: '2026-09-10T20:32:36.149Z',
+    __v: 0
+  },
+  totalPrice: 2.7,
+  unitPrice: 1.35,
+  quantity: 2,
+  pharmacyName: 'Care & Cure Pharmacy Mohammadpur',
+  medicineName: 'Ace 500 mg'
+}
+New Purchase count in history: 4
+

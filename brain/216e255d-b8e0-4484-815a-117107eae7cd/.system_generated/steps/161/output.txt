@@ -1,0 +1,8 @@
+
+The command exited with code 0.
+Output:
+panadol -> matchFound: false, count: undefined
+Napa 500 mg -> matchFound: true, count: 3
+napa -> matchFound: true, count: 3
+seclo -> matchFound: true, count: 3
+

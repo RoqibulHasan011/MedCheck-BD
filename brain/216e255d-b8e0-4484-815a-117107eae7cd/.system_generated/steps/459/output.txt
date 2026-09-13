@@ -1,0 +1,4 @@
+
+The command exited with code 0.
+Output:
+{"status":"online","appName":"MedCheck BD","environment":"development","time":"2026-09-10T20:09:50.360Z"}

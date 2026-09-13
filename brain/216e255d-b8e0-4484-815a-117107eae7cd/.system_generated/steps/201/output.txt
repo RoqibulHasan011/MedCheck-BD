@@ -1,0 +1,11 @@
+You have 1 background task(s) currently running:
+{
+  "taskId": "216e255d-b8e0-4484-815a-117107eae7cd/task-145",
+  "toolName": "run_command",
+  "toolSummary": "Start server.js daemon",
+  "description": "node server/server.js",
+  "startTime": "2026-09-10T13:04:02.356581100Z",
+  "stepIndex": 145,
+  "logUri": "file:///C:/Users/User/.gemini/antigravity/brain/216e255d-b8e0-4484-815a-117107eae7cd/.system_generated/tasks/task-145.log",
+  "isDaemon": true
+}

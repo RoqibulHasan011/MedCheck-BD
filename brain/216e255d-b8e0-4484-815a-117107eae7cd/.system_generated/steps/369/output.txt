@@ -1,0 +1,78 @@
+The following changes were made by the replace_file_content tool to: C:\Users\User\.gemini\antigravity\scratch\medcheck-bd\client\pharmacies.html. If relevant, proactively run terminal commands to execute this code for the USER. Don't ask for permission.
+[diff_block_start]
+@@ -67,7 +67,6 @@
+                 id="searchPharmacy"
+                 class="form-control"
+                 placeholder="e.g. MedCare, Lazz Pharma..."
+-                onkeyup="if(event.key==='Enter') loadPharmacies()"
+               >
+               <button class="btn btn-primary-custom" type="button" onclick="loadPharmacies()">
+                 <i class="fas fa-search"></i>
+@@ -74,6 +74,18 @@
+             </div>
+           </div>
+         </div>
++
++        <!-- Quick BD Pharmacy Filters -->
++        <div class="d-flex flex-wrap align-items-center gap-2 mt-3 pt-3 border-top small text-muted">
++          <span class="fw-bold text-navy"><i class="fas fa-fire text-danger me-1"></i> Popular BD Chains:</span>
++          <button type="button" class="btn btn-light btn-sm border text-dark py-0 px-2" onclick="quickFilterPharmacy('MedCare')">MedCare Pharmacy</button>
++          <button type="button" class="btn btn-light btn-sm border text-dark py-0 px-2" onclick="quickFilterPharmacy('Lazz Pharma')">Lazz Pharma</button>
++          <button type="button" class="btn btn-light btn-sm border text-dark py-0 px-2" onclick="quickFilterPharmacy('Tamanna')">Tamanna Mirpur</button>
++          <button type="button" class="btn btn-light btn-sm border text-dark py-0 px-2" onclick="quickFilterPharmacy('Popular')">Popular Uttara</button>
++          <button type="button" class="btn btn-link btn-sm text-danger p-0 ms-auto text-decoration-none" onclick="resetPharmacyFilters()">
++            <i class="fas fa-undo-alt me-1"></i> Reset Filters
++          </button>
++        </div>
+       </div>
+ 
+       <!-- Pharmacy Cards Grid -->
+@@ -98,6 +98,45 @@
+         const medInput = document.getElementById('filterMedicine');
+         if (medInput) medInput.value = decodeURIComponent(med);
+       }
++      const phm = urlParams.get('pharmacy');
++      if (phm) {
++        const phmInput = document.getElementById('searchPharmacy');
++        if (phmInput) phmInput.value = decodeURIComponent(phm);
++      }
++
++      // Attach autocompletes
++      setupMedicineAutocomplete('filterMedicine', () => loadPharmacies());
++      setupPharmacyAutocomplete('searchPharmacy', () => loadPharmacies());
++
++      // Live debounced input typing
++      let debounceTimer = null;
++      const triggerDebouncedLoad = () => {
++        clearTimeout(debounceTimer);
++        debounceTimer = setTimeout(loadPharmacies, 280);
++      };
++
++      const searchInput = document.getElementById('searchPharmacy');
++      if (searchInput) {
++        searchInput.addEventListener('input', triggerDebouncedLoad);
++        searchInput.addEventListener('keydown', (e) => {
++          if (e.key === 'Enter') {
++            clearTimeout(debounceTimer);
++            loadPharmacies();
++          }
++        });
++      }
++
++      const medInput = document.getElementById('filterMedicine');
++      if (medInput) {
++        medInput.addEventListener('input', triggerDebouncedLoad);
++        medInput.addEventListener('keydown', (e) => {
++          if (e.key === 'Enter') {
++            clearTimeout(debounceTimer);
++            loadPharmacies();
++          }
++        });
++      }
++
+       loadPharmacies();
+     });
+   </script>
+[diff_block_end]
+
+Please note that the above snippet only shows the MODIFIED lines from the last change. It shows up to 3 lines of unchanged lines before and after the modified lines. The actual file contents may have many more lines not shown.

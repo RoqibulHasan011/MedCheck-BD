@@ -1,0 +1,26 @@
+The following changes were made by the replace_file_content tool to: C:\Users\User\.gemini\antigravity\scratch\medcheck-bd\client\js\main.js. If relevant, proactively run terminal commands to execute this code for the USER. Don't ask for permission.
+[diff_block_start]
+@@ -507,6 +507,20 @@
+   }
+ }
+ 
++function clearLocalHistory() {
++  localStorage.removeItem('medcheck_local_history');
++}
++
++function removeLocalHistoryItem(id) {
++  try {
++    let list = getLocalHistory();
++    list = list.filter(item => item._id !== id);
++    localStorage.setItem('medcheck_local_history', JSON.stringify(list));
++  } catch (e) {
++    console.warn('Could not remove local history item', e);
++  }
++}
++
+ // Global Reusable Customer Order Modal
+ window.openCustomerOrderModal = function (opts) {
+   let modalEl = document.getElementById('customerOrderModal');
+[diff_block_end]
+
+Please note that the above snippet only shows the MODIFIED lines from the last change. It shows up to 3 lines of unchanged lines before and after the modified lines. The actual file contents may have many more lines not shown.

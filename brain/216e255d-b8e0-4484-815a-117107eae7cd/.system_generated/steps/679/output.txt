@@ -1,0 +1,9 @@
+
+The command exited with code 0.
+Output:
+Receipt lookup success: true
+Receipt ID: MC-2026-950708
+Customer: Shakil Mahmud 01711000003
+Pharmacy: Care & Cure Pharmacy Mohammadpur Mohammadpur
+Item: Ace 500 mg Qty: 2 Total: 2.7
+

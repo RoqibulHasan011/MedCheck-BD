@@ -1,0 +1,14 @@
+Task: 216e255d-b8e0-4484-815a-117107eae7cd/task-668
+Status: RUNNING
+Log: C:\Users\User\.gemini\antigravity\brain\216e255d-b8e0-4484-815a-117107eae7cd\.system_generated\tasks\task-668.log
+Log output:
+[Database] Attempting connection to MongoDB at: mongodb://127.0.0.1:27017/medcheck_bd
+[Database] Connected successfully to live MongoDB: 127.0.0.1
+[Server] Database contains 67 medicines ready.
+====================================================
+ MedCheck BD Server running on port 5000
+ Web Portal: http://localhost:5000
+ API Endpoint: http://localhost:5000/api/health
+====================================================
+
+Last progress: 0s ago

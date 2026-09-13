@@ -1,0 +1,540 @@
+/* ==========================================================================
+   MedCheck BD - Healthcare & Medicine Security Platform Stylesheet
+   ========================================================================== */
+
+:root {
+  --primary-blue: #0284c7;
+  --primary-dark-blue: #0369a1;
+  --navy-dark: #0f172a;
+  --navy-slate: #1e293b;
+  --navy-light: #334155;
+  --emerald-green: #10b981;
+  --emerald-dark: #059669;
+  --danger-red: #ef4444;
+  --danger-dark: #dc2626;
+  --warning-amber: #f59e0b;
+  --warning-dark: #d97706;
+  --bg-light: #f8fafc;
+  --card-bg: #ffffff;
+  --border-color: #e2e8f0;
+  --text-main: #1e293b;
+  --text-muted: #64748b;
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 18px;
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+  --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.07), 0 2px 4px -1px rgba(0,0,0,0.04);
+  --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.08), 0 4px 6px -2px rgba(0,0,0,0.04);
+  --shadow-xl: 0 20px 25px -5px rgba(0,0,0,0.1), 0 10px 10px -5px rgba(0,0,0,0.04);
+}
+
+body {
+  font-family: 'Segoe UI', system-ui, -apple-system, BlinkMacSystemFont, Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+  background-color: var(--bg-light);
+  color: var(--text-main);
+  line-height: 1.6;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+main {
+  flex: 1 0 auto;
+}
+
+/* ----------------- Header & Navbar ----------------- */
+.navbar-custom {
+  background-color: #ffffff;
+  border-bottom: 1px solid var(--border-color);
+  box-shadow: var(--shadow-sm);
+  padding: 0.85rem 1rem;
+}
+
+.brand-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 800;
+  font-size: 1.35rem;
+  color: var(--navy-dark);
+  text-decoration: none;
+}
+
+.brand-icon {
+  width: 38px;
+  height: 38px;
+  background: linear-gradient(135deg, var(--primary-blue), var(--emerald-green));
+  color: white;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.15rem;
+  box-shadow: 0 2px 8px rgba(2, 132, 199, 0.3);
+}
+
+.brand-tagline {
+  font-size: 0.72rem;
+  font-weight: 500;
+  color: var(--text-muted);
+  display: block;
+  margin-top: -3px;
+}
+
+.nav-link-custom {
+  font-weight: 500;
+  color: var(--navy-slate) !important;
+  padding: 0.5rem 0.85rem !important;
+  border-radius: var(--radius-sm);
+  transition: all 0.2s ease;
+}
+
+.nav-link-custom:hover, .nav-link-custom.active {
+  color: var(--primary-blue) !important;
+  background-color: rgba(2, 132, 199, 0.08);
+}
+
+/* ----------------- Hero Section ----------------- */
+.hero-section {
+  background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0369a1 100%);
+  color: white;
+  padding: 4.5rem 0;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero-section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(circle at 80% 20%, rgba(16, 185, 129, 0.15) 0%, transparent 60%);
+  pointer-events: none;
+}
+
+.hero-title {
+  font-size: 2.8rem;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  line-height: 1.2;
+}
+
+.hero-subtitle {
+  font-size: 1.15rem;
+  color: #cbd5e1;
+  max-width: 620px;
+  margin-top: 1rem;
+}
+
+.hero-card-illustration {
+  background: rgba(255, 255, 255, 0.07);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: var(--radius-lg);
+  padding: 2rem;
+  box-shadow: var(--shadow-xl);
+}
+
+/* ----------------- Cards & Components ----------------- */
+.card-custom {
+  background-color: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card-custom:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.feature-box {
+  border-radius: var(--radius-md);
+  background: #ffffff;
+  border: 1px solid var(--border-color);
+  padding: 1.8rem;
+  height: 100%;
+  transition: all 0.25s ease;
+}
+
+.feature-box:hover {
+  border-color: var(--primary-blue);
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg);
+}
+
+.feature-icon-wrapper {
+  width: 54px;
+  height: 54px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.4rem;
+  margin-bottom: 1.25rem;
+}
+
+/* ----------------- Badges & Status Pills ----------------- */
+.status-pill {
+  font-size: 0.78rem;
+  font-weight: 700;
+  padding: 0.35rem 0.75rem;
+  border-radius: 50rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+}
+
+.status-pill.registered,
+.status-pill.match,
+.status-pill.verified,
+.status-pill.instock,
+.status-pill.approved {
+  background-color: #dcfce7;
+  color: #166534;
+  border: 1px solid #bbf7d0;
+}
+
+.status-pill.review,
+.status-pill.lowstock,
+.status-pill.pending,
+.status-pill.expiring {
+  background-color: #fef3c7;
+  color: #92400e;
+  border: 1px solid #fde68a;
+}
+
+.status-pill.notfound,
+.status-pill.alert,
+.status-pill.expired,
+.status-pill.outofstock,
+.status-pill.rejected,
+.status-pill.recalled {
+  background-color: #fee2e2;
+  color: #991b1b;
+  border: 1px solid #fecaca;
+}
+
+/* ----------------- Verification Result Card ----------------- */
+.verify-result-card {
+  border-radius: var(--radius-lg);
+  border: 2px solid var(--border-color);
+  background: #ffffff;
+  box-shadow: var(--shadow-lg);
+  overflow: hidden;
+}
+
+.verify-header-match {
+  background: linear-gradient(135deg, #059669, #10b981);
+  color: white;
+  padding: 1.5rem 2rem;
+}
+
+.verify-header-review {
+  background: linear-gradient(135deg, #d97706, #f59e0b);
+  color: white;
+  padding: 1.5rem 2rem;
+}
+
+.verify-header-alert {
+  background: linear-gradient(135deg, #dc2626, #ef4444);
+  color: white;
+  padding: 1.5rem 2rem;
+}
+
+.result-detail-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.85rem 0;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.result-detail-label {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.result-detail-value {
+  font-weight: 600;
+  color: var(--navy-dark);
+  text-align: right;
+}
+
+/* ----------------- Table Styles ----------------- */
+.table-custom {
+  background: white;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--border-color);
+}
+
+.table-custom thead th {
+  background-color: #f8fafc;
+  color: var(--navy-slate);
+  font-weight: 600;
+  font-size: 0.82rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border-bottom: 2px solid var(--border-color);
+  padding: 0.9rem 1.1rem;
+}
+
+.table-custom tbody td {
+  padding: 1rem 1.1rem;
+  vertical-align: middle;
+  border-bottom: 1px solid #f1f5f9;
+  font-size: 0.92rem;
+}
+
+.table-custom tbody tr:hover {
+  background-color: #f8fafc;
+}
+
+/* ----------------- Buttons ----------------- */
+.btn-primary-custom {
+  background-color: var(--primary-blue);
+  border-color: var(--primary-blue);
+  color: white;
+  font-weight: 600;
+  border-radius: var(--radius-sm);
+  padding: 0.6rem 1.3rem;
+  transition: all 0.2s ease;
+}
+
+.btn-primary-custom:hover {
+  background-color: var(--primary-dark-blue);
+  border-color: var(--primary-dark-blue);
+  color: white;
+  box-shadow: 0 4px 10px rgba(2, 132, 199, 0.3);
+}
+
+.btn-success-custom {
+  background-color: var(--emerald-green);
+  border-color: var(--emerald-green);
+  color: white;
+  font-weight: 600;
+  border-radius: var(--radius-sm);
+  padding: 0.6rem 1.3rem;
+}
+
+.btn-success-custom:hover {
+  background-color: var(--emerald-dark);
+  border-color: var(--emerald-dark);
+  color: white;
+}
+
+/* ----------------- Toast & Notification ----------------- */
+.toast-container {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 1090;
+}
+
+.toast-custom {
+  background: white;
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-xl);
+  border: 1px solid var(--border-color);
+  min-width: 320px;
+}
+
+/* ----------------- Digital Receipt Styles ----------------- */
+.receipt-wrapper {
+  max-width: 580px;
+  margin: 2rem auto;
+  background: #ffffff;
+  border-radius: var(--radius-md);
+  border: 1px dashed #cbd5e1;
+  box-shadow: var(--shadow-lg);
+  padding: 2.5rem;
+}
+
+.receipt-header {
+  text-align: center;
+  border-bottom: 2px dashed #cbd5e1;
+  padding-bottom: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.receipt-barcode {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  padding: 0.8rem;
+  border-radius: 8px;
+  letter-spacing: 4px;
+  font-family: 'Courier New', Courier, monospace;
+  font-weight: bold;
+  text-align: center;
+}
+
+/* ----------------- Footer ----------------- */
+.footer-custom {
+  background-color: var(--navy-dark);
+  color: #94a3b8;
+  padding: 4rem 0 1.5rem;
+  margin-top: auto;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.footer-custom h5 {
+  color: #ffffff;
+  font-size: 1rem;
+  font-weight: 700;
+  margin-bottom: 1.25rem;
+}
+
+.footer-link {
+  color: #94a3b8;
+  text-decoration: none;
+  font-size: 0.9rem;
+  display: block;
+  margin-bottom: 0.6rem;
+  transition: color 0.2s ease;
+}
+
+.footer-link:hover {
+  color: #ffffff;
+}
+
+.footer-disclaimer-box {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius-sm);
+  padding: 1rem;
+  font-size: 0.82rem;
+  color: #cbd5e1;
+  margin-top: 2rem;
+}
+
+/* ----------------- Print Styles for Receipt ----------------- */
+@media print {
+  body * {
+    visibility: hidden;
+  }
+  .receipt-wrapper, .receipt-wrapper * {
+    visibility: visible;
+  }
+  .receipt-wrapper {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    margin: 0;
+    padding: 1.5cm;
+    box-shadow: none;
+    border: 1px solid #000;
+  }
+  .no-print {
+    display: none !important;
+  }
+}
+
+/* ----------------- Live Autocomplete Dropdown ----------------- */
+.autocomplete-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+/* Fix when autocomplete-wrapper is placed inside Bootstrap .input-group */
+.input-group {
+  flex-wrap: nowrap !important;
+}
+
+.input-group > .autocomplete-wrapper {
+  position: relative;
+  flex: 1 1 auto;
+  width: 1%;
+  min-width: 0;
+  display: flex;
+}
+
+.input-group > .autocomplete-wrapper > .form-control {
+  position: relative;
+  flex: 1 1 auto;
+  width: 100%;
+  min-width: 0;
+  height: 100%;
+}
+
+/* Precision border-radius handling within input-group */
+.input-group > .autocomplete-wrapper:not(:first-child):not(:last-child) > .form-control {
+  border-radius: 0 !important;
+}
+
+.input-group > .autocomplete-wrapper:not(:first-child):last-child > .form-control {
+  border-top-left-radius: 0 !important;
+  border-bottom-left-radius: 0 !important;
+  border-top-right-radius: var(--bs-border-radius, 0.375rem) !important;
+  border-bottom-right-radius: var(--bs-border-radius, 0.375rem) !important;
+}
+
+.input-group > .autocomplete-wrapper:first-child:not(:last-child) > .form-control {
+  border-top-left-radius: var(--bs-border-radius, 0.375rem) !important;
+  border-bottom-left-radius: var(--bs-border-radius, 0.375rem) !important;
+  border-top-right-radius: 0 !important;
+  border-bottom-right-radius: 0 !important;
+}
+
+.input-group > .autocomplete-wrapper > .form-control:focus {
+  z-index: 5;
+}
+
+.autocomplete-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: #ffffff;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-xl);
+  z-index: 1050;
+  max-height: 380px;
+  overflow-y: auto;
+  margin-top: 4px;
+}
+
+.autocomplete-item {
+  padding: 0.75rem 1.1rem;
+  border-bottom: 1px solid #f1f5f9;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.autocomplete-item:last-child {
+  border-bottom: none;
+}
+
+.autocomplete-item:hover,
+.autocomplete-item.active {
+  background-color: #f0f9ff;
+}
+
+.autocomplete-name {
+  font-weight: 700;
+  color: var(--navy-dark);
+  font-size: 0.95rem;
+}
+
+.autocomplete-meta {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+.autocomplete-price {
+  font-weight: bold;
+  color: var(--primary-blue);
+  font-size: 0.92rem;
+}
+

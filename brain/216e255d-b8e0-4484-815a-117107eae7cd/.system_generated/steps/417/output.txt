@@ -1,0 +1,4 @@
+
+The command exited with code 0.
+Output:
+{"success":true,"count":3,"data":[{"_id":"6aa30aed2b2ebf79d0106115","name":"Lazz Pharma Dhanmondi","phone":"+8801712000003","address":"Plot 12, Mirpur Road, Dhanmondi 27","area":"Dhanmondi","division":"Dhaka","verified":true},{"_id":"6aa30aed2b2ebf79d0106116","name":"Lazz Pharma Mirpur","phone":"+8801712000023","address":"Mirpur 10 Circle, Begum Rokeya Sarani, Mirpur","area":"Mirpur","division":"Dhaka","verified":true},{"_id":"6aa30aed2b2ebf79d0106117","name":"Lazz Pharma Uttara","phone":"+8801712000024","address":"House 18, Road 7, Sector 4, Uttara","area":"Uttara","division":"Dhaka","verified":true}]}

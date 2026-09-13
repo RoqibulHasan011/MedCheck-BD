@@ -1,0 +1,12 @@
+
+Encountered error in step execution: context canceled
+Output:
+[Database] Attempting connection to MongoDB at: mongodb://127.0.0.1:27017/medcheck_bd
+[Database] Connected successfully to live MongoDB: 127.0.0.1
+[Server] Database contains 22 medicines ready.
+====================================================
+ MedCheck BD Server running on port 5000
+ Web Portal: http://localhost:5000
+ API Endpoint: http://localhost:5000/api/health
+====================================================
+

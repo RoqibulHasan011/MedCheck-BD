@@ -1,0 +1,238 @@
+The following changes were made by the replace_file_content tool to: C:\Users\User\.gemini\antigravity\scratch\medcheck-bd\server\seed\seedData.js. If relevant, proactively run terminal commands to execute this code for the USER. Don't ask for permission.
+[diff_block_start]
+@@ -1093,10 +1093,10 @@
+     const createdBatches = await Batch.create(batchesData);
+     console.log(`[Seed] Created ${createdBatches.length} medicine batches.`);
+ 
+-    // 4. Create 10 Bangladeshi Pharmacies
++    // 4. Create Bangladeshi Pharmacies (including chain branches across Dhanmondi, Mirpur, Uttara, etc.)
+     const pharmaciesData = [
+       {
+-        name: 'MedCare Pharmacy',
++        name: 'MedCare Pharmacy Dhanmondi',
+         ownerName: 'Mohammad Faruk Hossain',
+         phone: '+8801819000002',
+         email: 'pharmacy@medcare.com',
+@@ -1110,6 +1110,36 @@
+         userId: pharmacyOwner1._id,
+       },
+       {
++        name: 'MedCare Pharmacy Mirpur',
++        ownerName: 'Mohammad Faruk Hossain',
++        phone: '+8801819000021',
++        email: 'mirpur@medcare.com',
++        address: 'Plot 14, Main Road, Section 10, Mirpur',
++        area: 'Mirpur',
++        division: 'Dhaka',
++        licenseNumber: 'DL-DHK-2023-4418',
++        verified: true,
++        status: 'Approved',
++        openingHours: '24 Hours',
++        isOpenNow: true,
++        userId: pharmacyOwner1._id,
++      },
++      {
++        name: 'MedCare Pharmacy Uttara',
++        ownerName: 'Mohammad Faruk Hossain',
++        phone: '+8801819000022',
++        email: 'uttara@medcare.com',
++        address: 'Sector 3, Jashimuddin Avenue, Uttara',
++        area: 'Uttara',
++        division: 'Dhaka',
++        licenseNumber: 'DL-DHK-2023-4419',
++        verified: true,
++        status: 'Approved',
++        openingHours: '8:00 AM - 11:30 PM',
++        isOpenNow: true,
++        userId: pharmacyOwner1._id,
++      },
++      {
+         name: 'Lazz Pharma Dhanmondi',
+         ownerName: 'Kabir Chowdhury',
+         phone: '+8801712000003',
+@@ -1124,6 +1124,36 @@
+         userId: pharmacyOwner2._id,
+       },
+       {
++        name: 'Lazz Pharma Mirpur',
++        ownerName: 'Kabir Chowdhury',
++        phone: '+8801712000023',
++        email: 'mirpur@lazzpharma.com',
++        address: 'Mirpur 10 Circle, Begum Rokeya Sarani, Mirpur',
++        area: 'Mirpur',
++        division: 'Dhaka',
++        licenseNumber: 'DL-DHK-2022-1008',
++        verified: true,
++        status: 'Approved',
++        openingHours: '24 Hours',
++        isOpenNow: true,
++        userId: pharmacyOwner2._id,
++      },
++      {
++        name: 'Lazz Pharma Uttara',
++        ownerName: 'Kabir Chowdhury',
++        phone: '+8801712000024',
++        email: 'uttara@lazzpharma.com',
++        address: 'House 18, Road 7, Sector 4, Uttara',
++        area: 'Uttara',
++        division: 'Dhaka',
++        licenseNumber: 'DL-DHK-2022-1009',
++        verified: true,
++        status: 'Approved',
++        openingHours: '24 Hours',
++        isOpenNow: true,
++        userId: pharmacyOwner2._id,
++      },
++      {
+         name: 'Tamanna Pharmacy Mirpur',
+         ownerName: 'Anisur Rahman',
+         phone: '+8801715000006',
+@@ -1138,7 +1138,7 @@
+         userId: pharmacyOwner1._id,
+       },
+       {
+-        name: 'Popular Medicine Corner',
++        name: 'Popular Medicine Corner Uttara',
+         ownerName: 'Mustafa Kamal',
+         phone: '+8801918000007',
+         email: 'popular@uttarapharma.com',
+@@ -1152,7 +1152,7 @@
+         userId: pharmacyOwner1._id,
+       },
+       {
+-        name: 'Care & Cure Pharmacy',
++        name: 'Care & Cure Pharmacy Mohammadpur',
+         ownerName: 'Rezaul Karim',
+         phone: '+8801817000008',
+         email: 'carecure@mohammadpur.com',
+@@ -1181,7 +1181,7 @@
+         userId: pharmacyOwner1._id,
+       },
+       {
+-        name: 'Green Life Drug House',
++        name: 'Green Life Drug House Banani',
+         ownerName: 'Shafiqul Islam',
+         phone: '+8801618000010',
+         email: 'greenlife@bananipharm.com',
+@@ -1244,90 +1244,43 @@
+     const createdPharmacies = await Pharmacy.create(pharmaciesData);
+     console.log(`[Seed] Created ${createdPharmacies.length} pharmacies across Bangladesh.`);
+ 
+-    // 5. Populate Inventories for Pharmacies
++    // 5. Populate Inventories for All Pharmacies
+     const inventoryData = [];
+-    const mainPharmacy = createdPharmacies[0]; // MedCare Pharmacy
+-    const secondPharmacy = createdPharmacies[1]; // Lazz Pharma
+-    const thirdPharmacy = createdPharmacies[2]; // Tamanna Pharmacy
+-
+-    // Populate MedCare Pharmacy with comprehensive stock
+-    createdMedicines.forEach((med, idx) => {
+-      const medBatches = createdBatches.filter((b) => String(b.medicineId) === String(med._id));
+-      const activeBatch = medBatches[0] || null;
+-
+-      // Price variations for demonstration
+-      let sellingPrice = med.referencePrice;
+-      if (idx % 3 === 0) sellingPrice = Number((med.referencePrice + 0.30).toFixed(2));
+-      else if (idx % 3 === 1) sellingPrice = Number(med.referencePrice.toFixed(2));
+-      else sellingPrice = Number((med.referencePrice - 0.20).toFixed(2));
+-
+-      // Quantity variations (low stock for idx === 2)
+-      let quantity = 50;
+-      if (idx === 2) quantity = 4; // LOW STOCK
+-      if (idx === 5) quantity = 0; // OUT OF STOCK
+-
+-      if (activeBatch) {
+-        inventoryData.push({
+-          pharmacyId: mainPharmacy._id,
+-          medicineId: med._id,
+-          batchId: activeBatch._id,
+-          quantity,
+-          purchasePrice: Number((med.referencePrice * 0.85).toFixed(2)),
+-          sellingPrice,
+-        });
+-      }
+-    });
+-
+-    // Populate second pharmacy (Lazz Pharma) with stock
+-    createdMedicines.slice(0, 55).forEach((med, idx) => {
+-      const medBatches = createdBatches.filter((b) => String(b.medicineId) === String(med._id));
+-      const activeBatch = medBatches[0];
+-      if (activeBatch) {
+-        inventoryData.push({
+-          pharmacyId: secondPharmacy._id,
+-          medicineId: med._id,
+-          batchId: activeBatch._id,
+-          quantity: 35 + (idx * 3),
+-          purchasePrice: Number((med.referencePrice * 0.83).toFixed(2)),
+-          sellingPrice: Number((med.referencePrice + (idx % 2 === 0 ? 0.20 : -0.10)).toFixed(2)),
+-        });
+-      }
+-    });
+-
+-    // Populate third pharmacy (Tamanna Mirpur)
+-    createdMedicines.slice(0, 45).forEach((med, idx) => {
+-      const medBatches = createdBatches.filter((b) => String(b.medicineId) === String(med._id));
+-      const activeBatch = medBatches[0];
+-      if (activeBatch) {
+-        inventoryData.push({
+-          pharmacyId: thirdPharmacy._id,
+-          medicineId: med._id,
+-          batchId: activeBatch._id,
+-          quantity: 25 + (idx * 2),
+-          purchasePrice: Number((med.referencePrice * 0.84).toFixed(2)),
+-          sellingPrice: Number((med.referencePrice + (idx % 3 === 0 ? 0.30 : 0)).toFixed(2)),
+-        });
+-      }
+-    });
+-
+-    // Populate fourth pharmacy (Popular Uttara)
+-    const fourthPharmacy = createdPharmacies[3];
+-    if (fourthPharmacy) {
+-      createdMedicines.slice(0, 40).forEach((med, idx) => {
++    const mainPharmacy = createdPharmacies[0]; // MedCare Pharmacy Dhanmondi
++
++    createdPharmacies.forEach((pharmacy, pIdx) => {
++      // Determine how many medicines this pharmacy stocks
++      const medCount = pharmacy.verified ? Math.min(createdMedicines.length, 50 + (pIdx % 15)) : 25;
++
++      createdMedicines.slice(0, medCount).forEach((med, mIdx) => {
+         const medBatches = createdBatches.filter((b) => String(b.medicineId) === String(med._id));
+-        const activeBatch = medBatches[0];
++        const activeBatch = medBatches[0] || null;
++
+         if (activeBatch) {
++          // Dynamic pricing: benchmark +/- small realistic variance
++          let sellingPrice = med.referencePrice;
++          const variance = ((pIdx + mIdx) % 5) - 2;
++          if (variance === 2) sellingPrice = Number((med.referencePrice + 0.30).toFixed(2));
++          else if (variance === 1) sellingPrice = Number((med.referencePrice + 0.15).toFixed(2));
++          else if (variance === -1) sellingPrice = Number(Math.max(0.5, med.referencePrice - 0.10).toFixed(2));
++          else if (variance === -2) sellingPrice = Number(Math.max(0.5, med.referencePrice - 0.20).toFixed(2));
++          else sellingPrice = Number(med.referencePrice.toFixed(2));
++
++          let quantity = 30 + ((pIdx * 7 + mIdx * 3) % 40);
++          if (mIdx === 2 && pIdx === 0) quantity = 4; // LOW STOCK
++          if (mIdx === 5 && pIdx === 1) quantity = 0; // OUT OF STOCK
++
+           inventoryData.push({
+-            pharmacyId: fourthPharmacy._id,
++            pharmacyId: pharmacy._id,
+             medicineId: med._id,
+             batchId: activeBatch._id,
+-            quantity: 30,
+-            purchasePrice: Number((med.referencePrice * 0.82).toFixed(2)),
+-            sellingPrice: Number((med.referencePrice + (idx % 2 === 0 ? -0.15 : 0.10)).toFixed(2)),
++            quantity,
++            purchasePrice: Number((med.referencePrice * 0.85).toFixed(2)),
++            sellingPrice,
+           });
+         }
+       });
+-    }
++    });
+ 
+     const createdInventory = await Inventory.create(inventoryData);
+     console.log(`[Seed] Created ${createdInventory.length} inventory records with dynamic price variances.`);
+[diff_block_end]
+
+Please note that the above snippet only shows the MODIFIED lines from the last change. It shows up to 3 lines of unchanged lines before and after the modified lines. The actual file contents may have many more lines not shown.

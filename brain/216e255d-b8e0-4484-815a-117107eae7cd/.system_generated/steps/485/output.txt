@@ -1,0 +1,4 @@
+{"File":"C:\\Users\\User\\.gemini\\antigravity\\scratch\\medcheck-bd\\client\\history.html","LineNumber":86,"LineContent":"        const res = await fetch(`/api/history?type=${type}`, { headers: getAuthHeaders() });"}
+{"File":"C:\\Users\\User\\.gemini\\antigravity\\scratch\\medcheck-bd\\client\\history.html","LineNumber":139,"LineContent":"        const res = await fetch(`/api/history/${id}`, {"}
+{"File":"C:\\Users\\User\\.gemini\\antigravity\\scratch\\medcheck-bd\\client\\history.html","LineNumber":157,"LineContent":"        const res = await fetch('/api/history', {"}
+{"File":"C:\\Users\\User\\.gemini\\antigravity\\scratch\\medcheck-bd\\client\\customer-dashboard.html","LineNumber":204,"LineContent":"        const histRes = await fetch('/api/history', { headers: getAuthHeaders() });"}

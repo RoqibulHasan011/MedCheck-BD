@@ -1,0 +1,20 @@
+
+The command exited with code 1.
+Output:
+v24.15.0
+npm : File C:\Program Files\nodejs\npm.ps1 cannot be loaded because running scripts is disabled on this system. For 
+more information, see about_Execution_Policies at https:/go.microsoft.com/fwlink/?LinkID=135170.
+At line:1 char:10
++ node -v; npm -v; mongod --version
++          ~~~
+    + CategoryInfo          : SecurityError: (:) [], PSSecurityException
+    + FullyQualifiedErrorId : UnauthorizedAccess
+mongod : The term 'mongod' is not recognized as the name of a cmdlet, function, script file, or operable program. 
+Check the spelling of the name, or if a path was included, verify that the path is correct and try again.
+At line:1 char:18
++ node -v; npm -v; mongod --version
++                  ~~~~~~
+    + CategoryInfo          : ObjectNotFound: (mongod:String) [], CommandNotFoundException
+    + FullyQualifiedErrorId : CommandNotFoundException
+ 
+

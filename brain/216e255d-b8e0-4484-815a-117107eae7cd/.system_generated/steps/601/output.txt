@@ -1,0 +1,71 @@
+The following changes were made by the replace_file_content tool to: C:\Users\User\.gemini\antigravity\scratch\medcheck-bd\client\js\pharmacy.js. If relevant, proactively run terminal commands to execute this code for the USER. Don't ask for permission.
+[diff_block_start]
+@@ -228,7 +228,7 @@
+       if (!stock || stock.length === 0) {
+         stockTableBody.innerHTML = `
+           <tr>
+-            <td colspan="7" class="text-center py-4 text-muted">No medicines currently listed in this pharmacy's digital inventory.</td>
++            <td colspan="8" class="text-center py-4 text-muted">No medicines currently listed in this pharmacy's digital inventory.</td>
+           </tr>
+         `;
+         return;
+@@ -239,14 +239,22 @@
+           if (item.stockStatus === 'LOW STOCK') statusBadgeClass = 'lowstock';
+           else if (item.stockStatus === 'OUT OF STOCK' || item.stockStatus === 'EXPIRED') statusBadgeClass = 'expired';
+ 
++          const medId = item.medicine ? (item.medicine._id || item.medicine.id) : '';
++          const medName = item.medicine ? item.medicine.name : 'Unknown';
++          const generic = item.medicine ? item.medicine.genericName : '';
++          const dosage = item.medicine ? item.medicine.dosageForm : 'Tablet';
++          const strength = item.medicine ? item.medicine.strength : '';
++          const batchNo = item.batch ? item.batch.batchNumber : '';
++          const isPurchasable = item.quantity > 0 && item.stockStatus !== 'EXPIRED' && item.stockStatus !== 'OUT OF STOCK';
++
+           return `
+           <tr>
+             <td>
+-              <strong class="text-navy">${item.medicine ? item.medicine.name : 'Unknown'}</strong>
+-              <div class="small text-muted">${item.medicine ? item.medicine.genericName : ''}</div>
+-            </td>
+-            <td><span class="badge bg-light text-dark border">${item.medicine ? item.medicine.dosageForm : 'Tablet'}</span></td>
+-            <td class="font-monospace small">${item.batch ? item.batch.batchNumber : 'N/A'}</td>
++              <strong class="text-navy">${medName}</strong>
++              <div class="small text-muted">${generic}</div>
++            </td>
++            <td><span class="badge bg-light text-dark border">${dosage}</span></td>
++            <td class="font-monospace small">${batchNo || 'N/A'}</td>
+             <td>
+               <span class="fw-bold">${item.quantity} units</span>
+             </td>
+@@ -256,6 +256,28 @@
+             <td>
+               <span class="status-pill ${statusBadgeClass}">${item.stockStatus}</span>
+             </td>
++            <td class="text-end">
++              ${isPurchasable ? `
++                <button class="btn btn-primary-custom btn-sm py-1 px-2" onclick='openCustomerOrderModal(${JSON.stringify({
++                  medicineId: medId,
++                  medicineName: medName,
++                  genericName: generic,
++                  dosageForm: dosage,
++                  strength: strength,
++                  batchNumber: batchNo,
++                  price: item.sellingPrice,
++                  pharmacyId: pharmacy._id || pharmacy.id,
++                  pharmacyName: pharmacy.name,
++                  pharmacyArea: pharmacy.area || "Dhaka"
++                }).replace(/'/g, "&apos;")})'>
++                  <i class="fas fa-shopping-cart me-1"></i>Buy
++                </button>
++              ` : `
++                <button class="btn btn-outline-secondary btn-sm py-1 px-2" disabled>
++                  Unavailable
++                </button>
++              `}
++            </td>
+           </tr>
+         `;
+         })
+[diff_block_end]
+
+Please note that the above snippet only shows the MODIFIED lines from the last change. It shows up to 3 lines of unchanged lines before and after the modified lines. The actual file contents may have many more lines not shown.

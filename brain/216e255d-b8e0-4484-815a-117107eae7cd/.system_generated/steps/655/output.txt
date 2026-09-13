@@ -1,0 +1,26 @@
+Task: 216e255d-b8e0-4484-815a-117107eae7cd/task-653
+Status: DONE
+Log: C:\Users\User\.gemini\antigravity\brain\216e255d-b8e0-4484-815a-117107eae7cd\.system_generated\tasks\task-653.log
+Log output:
+<truncated 18 lines>
+:1577:13)
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at async C:\Users\User\.gemini\antigravity\scratch\medcheck-bd\server\seed\seedData.js:1585:5 {
+  errors: {
+    paymentMethod: ValidatorError: `Cash on Delivery` is not a valid enum value for path `paymentMethod`.
+        at validate (C:\Users\User\.gemini\antigravity\scratch\medcheck-bd\node_modules\mongoose\lib\schemaType.js:1440:13)
+        at SchemaType.doValidate (C:\Users\User\.gemini\antigravity\scratch\medcheck-bd\node_modules\mongoose\lib\schemaType.js:1424:7)
+        at C:\Users\User\.gemini\antigravity\scratch\medcheck-bd\node_modules\mongoose\lib\document.js:3140:18
+        at process.processTicksAndRejections (node:internal/process/task_queues:85:11) {
+      properties: [Object],
+      kind: 'enum',
+      path: 'paymentMethod',
+      value: 'Cash on Delivery',
+      reason: undefined,
+      Symbol(mongoose#validatorError): true
+    }
+  },
+  _message: 'Sale validation failed'
+}
+
+Last progress: 2s ago
