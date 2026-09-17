@@ -3,7 +3,12 @@ const mongoose = require('mongoose');
 let mongod = null;
 
 const connectDB = async () => {
-  const uri = process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/medcheck_bd';
+  const isVercel = process.env.VERCEL === '1';
+  const uri = process.env.MONGODB_URI || (isVercel ? '' : 'mongodb://127.0.0.1:27017/medcheck_bd');
+
+  if (!uri) {
+    throw new Error('MONGODB_URI environment variable is required on Vercel');
+  }
   
   try {
     // Attempt connection to provided MongoDB URI (e.g. local or Atlas)
@@ -14,6 +19,10 @@ const connectDB = async () => {
     console.log(`[Database] Connected successfully to live MongoDB: ${mongoose.connection.host}`);
   } catch (err) {
     console.warn(`[Database] Live MongoDB connection failed (${err.message}).`);
+    if (isVercel) {
+      throw err;
+    }
+
     console.log('[Database] Starting built-in in-memory MongoDB server for standalone zero-config operation...');
     
     try {
@@ -30,7 +39,7 @@ const connectDB = async () => {
       console.log('[Database] Connected to In-Memory MongoDB database successfully.');
     } catch (memErr) {
       console.error('[Database] Failed to start in-memory MongoDB fallback:', memErr.message);
-      process.exit(1);
+      throw memErr;
     }
   }
 };
