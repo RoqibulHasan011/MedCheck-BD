@@ -143,6 +143,8 @@
 
         let rowsHtml = '<tr><td colspan="6" class="text-center py-4 text-muted">No pharmacies have listed current inventory for this medicine yet.</td></tr>';
         if (items && items.length > 0) {
+          const loggedUser = typeof getCurrentUser === 'function' ? getCurrentUser() : JSON.parse(localStorage.getItem('currentUser') || 'null');
+          const canBuyOnline = !loggedUser || (loggedUser.role !== 'pharmacy' && loggedUser.role !== 'admin');
           rowsHtml = items.map(item => {
             const isLowest = item.price === lowestPrice;
             const diff = item.priceDifference;
@@ -174,6 +176,7 @@
                 </td>
                 <td class="small text-muted">${formatDate(item.updatedAt)}</td>
                 <td class="text-end text-nowrap">
+                  ${canBuyOnline ? `
                   <button class="btn btn-primary-custom btn-sm py-1 px-2 me-1" onclick='openCustomerOrderModal(${JSON.stringify({
                     medicineId: medicine.id,
                     medicineName: medicine.name,
@@ -186,9 +189,9 @@
                     pharmacyArea: item.pharmacy.area
                   }).replace(/'/g, "&apos;")})'>
                     <i class="fas fa-shopping-cart me-1"></i>Order
-                  </button>
+                  </button>` : ''}
                   <a href="pharmacy-details.html?id=${item.pharmacy.id}" class="btn btn-outline-secondary btn-sm py-1 px-2">
-                    Details
+                    ${canBuyOnline ? 'Details' : '<i class="fas fa-store me-1"></i>View Store'}
                   </a>
                 </td>
               </tr>

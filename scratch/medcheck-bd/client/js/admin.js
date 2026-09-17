@@ -65,7 +65,8 @@ function renderAdminCharts(charts) {
       },
       options: {
         responsive: true,
-        plugins: { legend: { position: 'bottom' } },
+        maintainAspectRatio: false,
+        plugins: { legend: { position: 'bottom', labels: { boxWidth: 28, padding: 8 } } },
       },
     });
   }
@@ -92,6 +93,7 @@ function renderAdminCharts(charts) {
       },
       options: {
         responsive: true,
+        maintainAspectRatio: false,
         scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } },
         plugins: { legend: { display: false } },
       },
@@ -118,7 +120,8 @@ function renderAdminCharts(charts) {
       },
       options: {
         responsive: true,
-        plugins: { legend: { position: 'bottom' } },
+        maintainAspectRatio: false,
+        plugins: { legend: { position: 'bottom', labels: { boxWidth: 28, padding: 8 } } },
       },
     });
   }
@@ -127,7 +130,8 @@ function renderAdminCharts(charts) {
 // Load pending pharmacies for verification review
 async function loadPendingPharmacies() {
   const tableBody = document.getElementById('pendingPharmaciesTable');
-  if (!tableBody) return;
+  const dashboardList = document.getElementById('dashboardPendingList');
+  if (!tableBody && !dashboardList) return;
 
   try {
     const res = await fetch('/api/admin/pending-pharmacies', { headers: getAuthHeaders() });
@@ -136,41 +140,73 @@ async function loadPendingPharmacies() {
     if (!res.ok) throw new Error(data.message);
 
     const pharmacies = data.data || [];
-    if (pharmacies.length === 0) {
-      tableBody.innerHTML = `
-        <tr>
-          <td colspan="6" class="text-center py-4 text-muted">
-            <i class="fas fa-check-circle text-success me-1"></i> No pending pharmacy applications awaiting review.
-          </td>
-        </tr>
-      `;
-      return;
+    const badge = document.getElementById('badgePendingCount');
+    if (badge) badge.textContent = pharmacies.length;
+
+    if (tableBody) {
+      if (pharmacies.length === 0) {
+        tableBody.innerHTML = `
+          <tr>
+            <td colspan="6" class="text-center py-4 text-muted">
+              <i class="fas fa-check-circle text-success me-1"></i> No pending pharmacy applications awaiting review.
+            </td>
+          </tr>
+        `;
+      } else {
+        tableBody.innerHTML = pharmacies
+          .map(
+            (p) => `
+          <tr>
+            <td>
+              <strong class="text-dark">${p.name}</strong>
+              <div class="small text-muted">${p.address}</div>
+            </td>
+            <td>${p.ownerName}</td>
+            <td class="font-monospace small">${p.licenseNumber}</td>
+            <td><i class="fas fa-map-marker-alt text-danger me-1 small"></i>${p.area}, ${p.division}</td>
+            <td><span class="status-pill pending">Pending</span></td>
+            <td class="text-end">
+              <button class="btn btn-sm btn-success py-1 px-2 me-1" onclick="approvePharmacy('${p._id}', '${p.name}')">
+                <i class="fas fa-check me-1"></i> Approve
+              </button>
+              <button class="btn btn-sm btn-outline-danger py-1 px-2" onclick="rejectPharmacy('${p._id}', '${p.name}')">
+                <i class="fas fa-times me-1"></i> Reject
+              </button>
+            </td>
+          </tr>
+        `
+          )
+          .join('');
+      }
     }
 
-    tableBody.innerHTML = pharmacies
-      .map(
-        (p) => `
-      <tr>
-        <td>
-          <strong class="text-dark">${p.name}</strong>
-          <div class="small text-muted">${p.address}</div>
-        </td>
-        <td>${p.ownerName}</td>
-        <td class="font-monospace small">${p.licenseNumber}</td>
-        <td><i class="fas fa-map-marker-alt text-danger me-1 small"></i>${p.area}, ${p.division}</td>
-        <td><span class="status-pill pending">Pending</span></td>
-        <td class="text-end">
-          <button class="btn btn-sm btn-success py-1 px-2 me-1" onclick="approvePharmacy('${p._id}', '${p.name}')">
-            <i class="fas fa-check me-1"></i> Approve
-          </button>
-          <button class="btn btn-sm btn-outline-danger py-1 px-2" onclick="rejectPharmacy('${p._id}', '${p.name}')">
-            <i class="fas fa-times me-1"></i> Reject
-          </button>
-        </td>
-      </tr>
-    `
-      )
-      .join('');
+    if (dashboardList) {
+      if (pharmacies.length === 0) {
+        dashboardList.innerHTML = `
+          <div class="text-center py-4 text-muted">
+            <i class="fas fa-check-circle fa-2x text-success mb-2 d-block"></i>
+            No pending applications awaiting review.
+          </div>
+        `;
+      } else {
+        dashboardList.innerHTML = pharmacies
+          .slice(0, 3)
+          .map(
+            (p) => `
+          <div class="d-flex align-items-center justify-content-between p-2 border-bottom">
+            <div>
+              <strong class="text-navy small d-block">${p.name}</strong>
+              <span class="small text-muted font-monospace">${p.licenseNumber} • ${p.area}</span>
+            </div>
+            <div>
+              <a href="admin-approvals.html" class="btn btn-outline-success btn-sm py-0 px-2">Review</a>
+            </div>
+          </div>
+        `
+          )
+          .join('');
+      }
+    }
   } catch (err) {
     showToast(`Pending pharmacies error: ${err.message}`, 'danger');
   }
@@ -219,7 +255,8 @@ async function rejectPharmacy(id, name) {
 // Load suspicious medicine reports
 async function loadAdminReports() {
   const tableBody = document.getElementById('adminReportsTable');
-  if (!tableBody) return;
+  const dashboardList = document.getElementById('dashboardReportsList');
+  if (!tableBody && !dashboardList) return;
 
   try {
     const res = await fetch('/api/reports', { headers: getAuthHeaders() });
@@ -228,44 +265,80 @@ async function loadAdminReports() {
     if (!res.ok) throw new Error(data.message);
 
     const reports = data.data || [];
-    if (reports.length === 0) {
-      tableBody.innerHTML = `
-        <tr>
-          <td colspan="6" class="text-center py-4 text-muted">No reports submitted yet.</td>
-        </tr>
-      `;
-      return;
+
+    if (tableBody) {
+      if (reports.length === 0) {
+        tableBody.innerHTML = `
+          <tr>
+            <td colspan="6" class="text-center py-4 text-muted">No reports submitted yet.</td>
+          </tr>
+        `;
+      } else {
+        tableBody.innerHTML = reports
+          .map((r) => {
+            let statusBadge = 'bg-warning text-dark';
+            if (r.status === 'Resolved') statusBadge = 'bg-success';
+            if (r.status === 'Dismissed') statusBadge = 'bg-secondary';
+            if (r.status === 'Under Investigation') statusBadge = 'bg-danger';
+
+            return `
+            <tr>
+              <td class="font-monospace fw-bold">${r.reportId}</td>
+              <td>
+                <strong>${r.medicineName}</strong>
+                ${r.batchNumber ? `<div class="small text-muted font-monospace">Batch: ${r.batchNumber}</div>` : ''}
+              </td>
+              <td><span class="badge bg-light text-danger border border-danger-subtle">${r.issueType}</span></td>
+              <td class="small" style="max-width: 250px;">${r.description}</td>
+              <td><span class="badge ${statusBadge}">${r.status}</span></td>
+              <td class="text-end">
+                <select class="form-select form-select-sm d-inline-block w-auto" onchange="updateReportStatus('${r._id}', this.value)">
+                  <option value="">Change Status...</option>
+                  <option value="Under Investigation">Investigating</option>
+                  <option value="Resolved">Resolved</option>
+                  <option value="Dismissed">Dismiss</option>
+                </select>
+              </td>
+            </tr>
+          `;
+          })
+          .join('');
+      }
     }
 
-    tableBody.innerHTML = reports
-      .map((r) => {
-        let statusBadge = 'bg-warning text-dark';
-        if (r.status === 'Resolved') statusBadge = 'bg-success';
-        if (r.status === 'Dismissed') statusBadge = 'bg-secondary';
-        if (r.status === 'Under Investigation') statusBadge = 'bg-danger';
+    if (dashboardList) {
+      if (reports.length === 0) {
+        dashboardList.innerHTML = `
+          <div class="text-center py-4 text-muted">
+            <i class="fas fa-shield-check fa-2x text-success mb-2 d-block"></i>
+            No community incident reports filed yet.
+          </div>
+        `;
+      } else {
+        dashboardList.innerHTML = reports
+          .slice(0, 3)
+          .map((r) => {
+            let statusBadge = 'bg-warning text-dark';
+            if (r.status === 'Resolved') statusBadge = 'bg-success';
+            if (r.status === 'Dismissed') statusBadge = 'bg-secondary';
+            if (r.status === 'Under Investigation') statusBadge = 'bg-danger';
 
-        return `
-        <tr>
-          <td class="font-monospace fw-bold">${r.reportId}</td>
-          <td>
-            <strong>${r.medicineName}</strong>
-            ${r.batchNumber ? `<div class="small text-muted font-monospace">Batch: ${r.batchNumber}</div>` : ''}
-          </td>
-          <td><span class="badge bg-light text-danger border border-danger-subtle">${r.issueType}</span></td>
-          <td class="small" style="max-width: 250px;">${r.description}</td>
-          <td><span class="badge ${statusBadge}">${r.status}</span></td>
-          <td class="text-end">
-            <select class="form-select form-select-sm d-inline-block w-auto" onchange="updateReportStatus('${r._id}', this.value)">
-              <option value="">Change Status...</option>
-              <option value="Under Investigation">Investigating</option>
-              <option value="Resolved">Resolved</option>
-              <option value="Dismissed">Dismiss</option>
-            </select>
-          </td>
-        </tr>
-      `;
-      })
-      .join('');
+            return `
+            <div class="d-flex align-items-center justify-content-between p-2 border-bottom">
+              <div>
+                <strong class="text-navy small d-block">${r.medicineName}</strong>
+                <span class="badge bg-light text-danger border border-danger-subtle small">${r.issueType}</span>
+              </div>
+              <div class="text-end">
+                <span class="badge ${statusBadge} small d-block mb-1">${r.status}</span>
+                <a href="admin-reports.html" class="btn btn-outline-danger btn-sm py-0 px-2">Investigate</a>
+              </div>
+            </div>
+          `;
+          })
+          .join('');
+      }
+    }
   } catch (err) {
     console.error('Reports load error', err);
   }
@@ -424,3 +497,25 @@ async function loadAccessLogs() {
     console.error('Access logs load error', err);
   }
 }
+
+// Dedicated Page Initializers
+async function initAdminApprovalsPage() {
+  if (!enforceRoleGuard(['admin'])) return;
+  await loadPendingPharmacies();
+}
+
+async function initAdminMedicinesPage() {
+  if (!enforceRoleGuard(['admin'])) return;
+  await loadAdminMedicines();
+}
+
+async function initAdminReportsPage() {
+  if (!enforceRoleGuard(['admin'])) return;
+  await loadAdminReports();
+}
+
+async function initAdminLogsPage() {
+  if (!enforceRoleGuard(['admin'])) return;
+  await loadAccessLogs();
+}
+

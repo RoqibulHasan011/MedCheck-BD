@@ -61,55 +61,225 @@ function renderNavbar() {
 
   const token = localStorage.getItem('token');
   const user = JSON.parse(localStorage.getItem('user') || 'null');
+  const pharmacy = JSON.parse(localStorage.getItem('pharmacy') || 'null');
   const currentPath = window.location.pathname;
 
-  let authLinks = `
-    <li class="nav-item">
-      <a class="nav-link nav-link-custom ${currentPath.includes('login') ? 'active' : ''}" href="login.html">
-        <i class="fas fa-sign-in-alt me-1"></i> Login
-      </a>
-    </li>
-    <li class="nav-item ms-lg-2">
-      <a class="btn btn-primary-custom btn-sm px-3" href="register.html">
-        <i class="fas fa-user-plus me-1"></i> Register
-      </a>
-    </li>
-  `;
+  let mainNavLinks = '';
+  let authLinks = '';
 
-  if (token && user) {
-    let dashboardLink = 'customer-dashboard.html';
-    let roleBadge = '<span class="badge bg-primary ms-1">Customer</span>';
-
-    if (user.role === 'admin') {
-      dashboardLink = 'admin-dashboard.html';
-      roleBadge = '<span class="badge bg-danger ms-1">Admin</span>';
-    } else if (user.role === 'pharmacy') {
-      dashboardLink = 'pharmacy-dashboard.html';
-      roleBadge = '<span class="badge bg-success ms-1">Pharmacy</span>';
-    }
+  if (!token || !user) {
+    // -------------------------------------------------------------
+    // GUEST / PUBLIC VISITOR NAVBAR
+    // -------------------------------------------------------------
+    mainNavLinks = `
+      <li class="nav-item">
+        <a class="nav-link nav-link-custom ${currentPath.endsWith('/') || currentPath.includes('index') ? 'active' : ''}" href="index.html">Home</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link nav-link-custom ${currentPath.includes('verify') ? 'active' : ''}" href="verify.html">
+          <i class="fas fa-check-circle text-success me-1"></i> Verify Medicine
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link nav-link-custom ${currentPath.includes('price') ? 'active' : ''}" href="price.html">Price Check</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link nav-link-custom ${currentPath.includes('pharmacies') ? 'active' : ''}" href="pharmacies.html">Find Pharmacy</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link nav-link-custom ${currentPath.includes('report') ? 'active' : ''}" href="report.html">Report Issue</a>
+      </li>
+    `;
 
     authLinks = `
       <li class="nav-item">
-        <a class="nav-link nav-link-custom fw-bold text-primary ${currentPath.includes('dashboard') ? 'active' : ''}" href="${dashboardLink}">
+        <a class="nav-link nav-link-custom ${currentPath.includes('login') ? 'active' : ''}" href="login.html">
+          <i class="fas fa-sign-in-alt me-1"></i> Login
+        </a>
+      </li>
+      <li class="nav-item ms-lg-2">
+        <a class="btn btn-primary-custom btn-sm px-3" href="register.html">
+          <i class="fas fa-user-plus me-1"></i> Register
+        </a>
+      </li>
+    `;
+  } else if (user.role === 'admin') {
+    // -------------------------------------------------------------
+    // ADMIN OVERSIGHT & GOVERNANCE NAVBAR
+    // -------------------------------------------------------------
+    mainNavLinks = `
+      <li class="nav-item">
+        <a class="nav-link nav-link-custom fw-bold ${currentPath.includes('admin-dashboard') ? 'active text-danger' : ''}" href="admin-dashboard.html">
+          <i class="fas fa-chart-line text-danger me-1"></i> Admin Console
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link nav-link-custom ${currentPath.includes('admin-approvals') ? 'active text-danger' : ''}" href="admin-approvals.html">
+          <i class="fas fa-user-check text-success me-1"></i> Pharmacy Approvals
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link nav-link-custom ${currentPath.includes('admin-medicines') ? 'active text-danger' : ''}" href="admin-medicines.html">
+          <i class="fas fa-pills text-primary me-1"></i> Medicine Registry
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link nav-link-custom ${currentPath.includes('admin-reports') ? 'active text-danger' : ''}" href="admin-reports.html">
+          <i class="fas fa-flag text-warning me-1"></i> Safety Reports
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link nav-link-custom ${currentPath.includes('admin-logs') ? 'active text-danger' : ''}" href="admin-logs.html">
+          <i class="fas fa-clipboard-list text-info me-1"></i> Audit Trail
+        </a>
+      </li>
+      <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle nav-link-custom text-secondary" href="#" id="adminPublicDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+          <i class="fas fa-globe me-1"></i> Consumer Portals
+        </a>
+        <ul class="dropdown-menu shadow-sm border-0" aria-labelledby="adminPublicDropdown">
+          <li><a class="dropdown-item" href="index.html"><i class="fas fa-home me-2 text-muted"></i>Homepage</a></li>
+          <li><a class="dropdown-item" href="verify.html"><i class="fas fa-shield-alt me-2 text-success"></i>Verify Medicine</a></li>
+          <li><a class="dropdown-item" href="price.html"><i class="fas fa-tags me-2 text-primary"></i>Market Price Check</a></li>
+          <li><a class="dropdown-item" href="pharmacies.html"><i class="fas fa-clinic-medical me-2 text-info"></i>Pharmacies Directory</a></li>
+        </ul>
+      </li>
+    `;
+
+    authLinks = `
+      <li class="nav-item me-lg-2">
+        <button class="btn btn-outline-danger btn-sm" onclick="openAdminAddMedModal()">
+          <i class="fas fa-plus me-1"></i> Add Medicine
+        </button>
+      </li>
+      <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle nav-link-custom d-flex align-items-center" href="#" id="adminUserDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+          <i class="fas fa-user-shield fa-lg me-2 text-danger"></i>
+          <span class="fw-bold">${user.name ? user.name.split(' ')[0] : 'Admin'}</span>
+          <span class="badge bg-danger ms-2">Central Admin</span>
+        </a>
+        <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0" aria-labelledby="adminUserDropdown">
+          <li><h6 class="dropdown-header text-muted">${user.email}</h6></li>
+          <li><a class="dropdown-item" href="admin-dashboard.html"><i class="fas fa-columns me-2 text-danger"></i>Admin Console</a></li>
+          <li><a class="dropdown-item" href="admin-approvals.html"><i class="fas fa-user-check me-2 text-success"></i>Pharmacy Approvals</a></li>
+          <li><a class="dropdown-item" href="admin-medicines.html"><i class="fas fa-pills me-2 text-primary"></i>Medicine Database</a></li>
+          <li><a class="dropdown-item" href="admin-reports.html"><i class="fas fa-flag me-2 text-warning"></i>Safety Reports</a></li>
+          <li><a class="dropdown-item" href="admin-logs.html"><i class="fas fa-history me-2 text-info"></i>Security Audit Trail</a></li>
+          <li><hr class="dropdown-divider"></li>
+          <li><a class="dropdown-item text-danger" href="javascript:void(0)" onclick="logoutUser()"><i class="fas fa-sign-out-alt me-2"></i>Logout</a></li>
+        </ul>
+      </li>
+    `;
+  } else if (user.role === 'pharmacy') {
+    // -------------------------------------------------------------
+    // PHARMACY PORTAL & DISPENSARY OPERATIONS NAVBAR
+    // -------------------------------------------------------------
+    const pharmacyId = pharmacy ? (pharmacy._id || pharmacy.id) : '';
+
+    mainNavLinks = `
+      <li class="nav-item">
+        <a class="nav-link nav-link-custom fw-bold ${currentPath.includes('pharmacy-dashboard') ? 'active text-success' : ''}" href="pharmacy-dashboard.html">
+          <i class="fas fa-columns text-success me-1"></i> Dashboard
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link nav-link-custom ${currentPath.includes('pharmacy-inventory') ? 'active text-success' : ''}" href="pharmacy-inventory.html">
+          <i class="fas fa-boxes text-primary me-1"></i> Stock Inventory
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link nav-link-custom ${currentPath.includes('pharmacy-sales') ? 'active text-success' : ''}" href="pharmacy-sales.html">
+          <i class="fas fa-file-invoice-dollar text-success me-1"></i> Sales & Orders
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link nav-link-custom ${currentPath.includes('pharmacy-alerts') ? 'active text-success' : ''}" href="pharmacy-alerts.html">
+          <i class="fas fa-bell text-danger me-1"></i> Expiry Alerts
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link nav-link-custom ${currentPath.includes('verify') ? 'active text-success' : ''}" href="verify.html">
+          <i class="fas fa-barcode text-secondary me-1"></i> Verify Batch
+        </a>
+      </li>
+      <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle nav-link-custom text-secondary" href="#" id="pharmaMarketDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+          <i class="fas fa-store me-1"></i> Market View
+        </a>
+        <ul class="dropdown-menu shadow-sm border-0" aria-labelledby="pharmaMarketDropdown">
+          <li><a class="dropdown-item" href="price.html"><i class="fas fa-tags me-2 text-primary"></i>Check Market Prices</a></li>
+          <li><a class="dropdown-item" href="pharmacies.html"><i class="fas fa-clinic-medical me-2 text-info"></i>Pharmacies Directory</a></li>
+          ${pharmacyId ? `<li><a class="dropdown-item" href="pharmacy-details.html?id=${pharmacyId}"><i class="fas fa-external-link-alt me-2 text-success"></i>My Public Store Profile</a></li>` : ''}
+          <li><a class="dropdown-item" href="index.html"><i class="fas fa-home me-2 text-muted"></i>Consumer Homepage</a></li>
+        </ul>
+      </li>
+    `;
+
+    authLinks = `
+      <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle nav-link-custom d-flex align-items-center" href="#" id="pharmacyUserDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+          <i class="fas fa-clinic-medical fa-lg me-2 text-success"></i>
+          <span class="fw-bold">${pharmacy ? pharmacy.name.split(' ')[0] : (user.name ? user.name.split(' ')[0] : 'Pharmacy')}</span>
+          <span class="badge bg-success ms-2">Pharmacy</span>
+        </a>
+        <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0" aria-labelledby="pharmacyUserDropdown">
+          <li><h6 class="dropdown-header text-muted">${pharmacy ? pharmacy.name : user.email}</h6></li>
+          <li><a class="dropdown-item" href="pharmacy-dashboard.html"><i class="fas fa-columns me-2 text-success"></i>Pharmacy Dashboard</a></li>
+          <li><a class="dropdown-item" href="pharmacy-inventory.html"><i class="fas fa-boxes me-2 text-primary"></i>Manage Stock Inventory</a></li>
+          <li><a class="dropdown-item" href="pharmacy-sales.html"><i class="fas fa-receipt me-2 text-info"></i>Sales & Customer Orders</a></li>
+          <li><a class="dropdown-item" href="pharmacy-alerts.html"><i class="fas fa-bell me-2 text-danger"></i>Expiry & Safety Alerts</a></li>
+          ${pharmacyId ? `<li><a class="dropdown-item" href="pharmacy-details.html?id=${pharmacyId}"><i class="fas fa-store me-2 text-warning"></i>View Public Profile</a></li>` : ''}
+          <li><hr class="dropdown-divider"></li>
+          <li><a class="dropdown-item text-danger" href="javascript:void(0)" onclick="logoutUser()"><i class="fas fa-sign-out-alt me-2"></i>Logout</a></li>
+        </ul>
+      </li>
+    `;
+  } else {
+    // -------------------------------------------------------------
+    // CUSTOMER / PATIENT REGISTERED USER NAVBAR
+    // -------------------------------------------------------------
+    mainNavLinks = `
+      <li class="nav-item">
+        <a class="nav-link nav-link-custom ${currentPath.endsWith('/') || currentPath.includes('index') ? 'active' : ''}" href="index.html">Home</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link nav-link-custom ${currentPath.includes('verify') ? 'active' : ''}" href="verify.html">
+          <i class="fas fa-check-circle text-success me-1"></i> Verify Medicine
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link nav-link-custom ${currentPath.includes('price') ? 'active' : ''}" href="price.html">Price Check</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link nav-link-custom ${currentPath.includes('pharmacies') ? 'active' : ''}" href="pharmacies.html">Find Pharmacy</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link nav-link-custom ${currentPath.includes('history') ? 'active' : ''}" href="history.html">
+          <i class="fas fa-history text-primary me-1"></i> My History
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link nav-link-custom ${currentPath.includes('report') ? 'active' : ''}" href="report.html">Report Issue</a>
+      </li>
+    `;
+
+    authLinks = `
+      <li class="nav-item">
+        <a class="nav-link nav-link-custom fw-bold text-primary ${currentPath.includes('customer-dashboard') ? 'active' : ''}" href="customer-dashboard.html">
           <i class="fas fa-columns me-1"></i> Dashboard
         </a>
       </li>
-      ${user.role === 'customer' ? `
-      <li class="nav-item">
-        <a class="nav-link nav-link-custom ${currentPath.includes('history') ? 'active' : ''}" href="history.html">
-          <i class="fas fa-history me-1"></i> My History
-        </a>
-      </li>` : ''}
       <li class="nav-item dropdown ms-lg-2">
-        <a class="nav-link dropdown-toggle nav-link-custom d-flex align-items-center" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-          <i class="fas fa-user-circle fa-lg me-2 text-secondary"></i>
-          <span>${user.name ? user.name.split(' ')[0] : 'User'}</span>
-          ${roleBadge}
+        <a class="nav-link dropdown-toggle nav-link-custom d-flex align-items-center" href="#" id="customerUserDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+          <i class="fas fa-user-circle fa-lg me-2 text-primary"></i>
+          <span>${user.name ? user.name.split(' ')[0] : 'Customer'}</span>
+          <span class="badge bg-primary ms-2">Customer</span>
         </a>
-        <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0" aria-labelledby="userDropdown">
+        <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0" aria-labelledby="customerUserDropdown">
           <li><h6 class="dropdown-header text-muted">${user.email}</h6></li>
-          <li><a class="dropdown-item" href="${dashboardLink}"><i class="fas fa-tachometer-alt me-2 text-primary"></i>Dashboard</a></li>
-          ${user.role === 'customer' ? '<li><a class="dropdown-item" href="report.html"><i class="fas fa-bullhorn me-2 text-warning"></i>Report Issue</a></li>' : ''}
+          <li><a class="dropdown-item" href="customer-dashboard.html"><i class="fas fa-tachometer-alt me-2 text-primary"></i>Dashboard</a></li>
+          <li><a class="dropdown-item" href="history.html"><i class="fas fa-history me-2 text-info"></i>Medicine History</a></li>
+          <li><a class="dropdown-item" href="report.html"><i class="fas fa-bullhorn me-2 text-warning"></i>Report Issue</a></li>
           <li><hr class="dropdown-divider"></li>
           <li><a class="dropdown-item text-danger" href="javascript:void(0)" onclick="logoutUser()"><i class="fas fa-sign-out-alt me-2"></i>Logout</a></li>
         </ul>
@@ -134,23 +304,7 @@ function renderNavbar() {
         </button>
         <div class="collapse navbar-collapse" id="navbarContent">
           <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4">
-            <li class="nav-item">
-              <a class="nav-link nav-link-custom ${currentPath.endsWith('/') || currentPath.includes('index') ? 'active' : ''}" href="index.html">Home</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link nav-link-custom ${currentPath.includes('verify') ? 'active' : ''}" href="verify.html">
-                <i class="fas fa-check-shield text-success me-1"></i> Verify Medicine
-              </a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link nav-link-custom ${currentPath.includes('price') ? 'active' : ''}" href="price.html">Price Check</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link nav-link-custom ${currentPath.includes('pharmacies') ? 'active' : ''}" href="pharmacies.html">Find Pharmacy</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link nav-link-custom ${currentPath.includes('report') ? 'active' : ''}" href="report.html">Report Issue</a>
-            </li>
+            ${mainNavLinks}
           </ul>
           <ul class="navbar-nav mb-2 mb-lg-0 align-items-lg-center">
             ${authLinks}
@@ -160,6 +314,31 @@ function renderNavbar() {
     </nav>
   `;
 }
+
+// Global modal triggers for role actions
+window.openPharmacyPosModal = function() {
+  if (window.location.pathname.includes('pharmacy-sales.html')) {
+    const modalEl = document.getElementById('recordSaleModal');
+    if (modalEl) {
+      const modal = new bootstrap.Modal(modalEl);
+      modal.show();
+    }
+  } else {
+    window.location.href = 'pharmacy-sales.html?action=pos';
+  }
+};
+
+window.openAdminAddMedModal = function() {
+  if (window.location.pathname.includes('admin-dashboard.html')) {
+    const modalEl = document.getElementById('addMedicineModal');
+    if (modalEl) {
+      const modal = new bootstrap.Modal(modalEl);
+      modal.show();
+    }
+  } else {
+    window.location.href = 'admin-dashboard.html?action=add-medicine';
+  }
+};
 
 // Render uniform footer across all pages
 function renderFooter() {
@@ -476,9 +655,19 @@ function setupPharmacyAutocomplete(inputElementId, onSelectCallback) {
 }
 
 // Local Medicine History Helpers
+function getLocalHistoryKey() {
+  try {
+    const user = JSON.parse(localStorage.getItem('user') || 'null');
+    const userId = user && (user.id || user._id);
+    return userId ? `medcheck_local_history_${userId}` : 'medcheck_local_history_guest';
+  } catch (e) {
+    return 'medcheck_local_history_guest';
+  }
+}
+
 function getLocalHistory() {
   try {
-    return JSON.parse(localStorage.getItem('medcheck_local_history') || '[]');
+    return JSON.parse(localStorage.getItem(getLocalHistoryKey()) || '[]');
   } catch (e) {
     return [];
   }
@@ -501,21 +690,21 @@ function saveLocalHistoryItem(item) {
       checkedAt: new Date().toISOString(),
       isLocal: true,
     });
-    localStorage.setItem('medcheck_local_history', JSON.stringify(list.slice(0, 50)));
+    localStorage.setItem(getLocalHistoryKey(), JSON.stringify(list.slice(0, 50)));
   } catch (e) {
     console.warn('Could not save local history', e);
   }
 }
 
 function clearLocalHistory() {
-  localStorage.removeItem('medcheck_local_history');
+  localStorage.removeItem(getLocalHistoryKey());
 }
 
 function removeLocalHistoryItem(id) {
   try {
     let list = getLocalHistory();
     list = list.filter(item => item._id !== id);
-    localStorage.setItem('medcheck_local_history', JSON.stringify(list));
+    localStorage.setItem(getLocalHistoryKey(), JSON.stringify(list));
   } catch (e) {
     console.warn('Could not remove local history item', e);
   }
@@ -523,6 +712,12 @@ function removeLocalHistoryItem(id) {
 
 // Global Reusable Customer Order Modal
 window.openCustomerOrderModal = function (opts) {
+  const user = JSON.parse(localStorage.getItem('user') || 'null');
+  if (user && (user.role === 'pharmacy' || user.role === 'admin')) {
+    showToast('Online medicine purchasing is for customer accounts. Pharmacies manage inventory through the Pharmacy Portal.', 'warning');
+    return;
+  }
+
   let modalEl = document.getElementById('customerOrderModal');
   if (!modalEl) {
     modalEl = document.createElement('div');
@@ -646,7 +841,6 @@ window.openCustomerOrderModal = function (opts) {
   document.getElementById('orderQuantity').value = 1;
 
   // Prefill user data if logged in
-  const user = JSON.parse(localStorage.getItem('user') || 'null');
   if (user) {
     document.getElementById('orderCustName').value = user.name || '';
     document.getElementById('orderCustPhone').value = user.phone || '';

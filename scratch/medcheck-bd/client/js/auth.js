@@ -96,6 +96,16 @@ async function handleLogin(e) {
       localStorage.removeItem('pharmacy');
     }
 
+    // Ask supported browsers to save credentials for future login suggestions.
+    if (window.PasswordCredential && navigator.credentials?.store) {
+      try {
+        const credential = new PasswordCredential({ id: email, password });
+        await navigator.credentials.store(credential);
+      } catch (credentialError) {
+        console.warn('Browser credential storage unavailable', credentialError);
+      }
+    }
+
     showToast(`Welcome back, ${data.user.name}!`, 'success');
 
     setTimeout(() => {

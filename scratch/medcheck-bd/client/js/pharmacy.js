@@ -267,26 +267,41 @@ async function loadPharmacyDetails() {
               <span class="status-pill ${statusBadgeClass}">${item.stockStatus}</span>
             </td>
             <td class="text-end">
-              ${isPurchasable ? `
-                <button class="btn btn-primary-custom btn-sm py-1 px-2" onclick='openCustomerOrderModal(${JSON.stringify({
-                  medicineId: medId,
-                  medicineName: medName,
-                  genericName: generic,
-                  dosageForm: dosage,
-                  strength: strength,
-                  batchNumber: batchNo,
-                  price: item.sellingPrice,
-                  pharmacyId: pharmacy._id || pharmacy.id,
-                  pharmacyName: pharmacy.name,
-                  pharmacyArea: pharmacy.area || "Dhaka"
-                }).replace(/'/g, "&apos;")})'>
-                  <i class="fas fa-shopping-cart me-1"></i>Buy
-                </button>
-              ` : `
-                <button class="btn btn-outline-secondary btn-sm py-1 px-2" disabled>
-                  Unavailable
-                </button>
-              `}
+              ${(() => {
+                const currentUser = JSON.parse(localStorage.getItem('user') || 'null');
+                const userPharm = JSON.parse(localStorage.getItem('pharmacy') || 'null');
+                const isOwnStore = userPharm && (userPharm._id === (pharmacy._id || pharmacy.id));
+
+                if (currentUser && (currentUser.role === 'pharmacy' || currentUser.role === 'admin')) {
+                  if (isOwnStore) {
+                    return `<a href="pharmacy-inventory.html" class="btn btn-outline-primary btn-sm py-1 px-2"><i class="fas fa-boxes me-1"></i>Manage</a>`;
+                  }
+                  return isPurchasable
+                    ? `<span class="badge bg-light text-secondary border py-1 px-2"><i class="fas fa-check-circle me-1 text-success"></i>Available</span>`
+                    : `<span class="badge bg-light text-muted border py-1 px-2">Out of Stock</span>`;
+                }
+
+                return isPurchasable ? `
+                  <button class="btn btn-primary-custom btn-sm py-1 px-2" onclick='openCustomerOrderModal(${JSON.stringify({
+                    medicineId: medId,
+                    medicineName: medName,
+                    genericName: generic,
+                    dosageForm: dosage,
+                    strength: strength,
+                    batchNumber: batchNo,
+                    price: item.sellingPrice,
+                    pharmacyId: pharmacy._id || pharmacy.id,
+                    pharmacyName: pharmacy.name,
+                    pharmacyArea: pharmacy.area || "Dhaka"
+                  }).replace(/'/g, "&apos;")})'>
+                    <i class="fas fa-shopping-cart me-1"></i>Buy
+                  </button>
+                ` : `
+                  <button class="btn btn-outline-secondary btn-sm py-1 px-2" disabled>
+                    Unavailable
+                  </button>
+                `;
+              })()}
             </td>
           </tr>
         `;

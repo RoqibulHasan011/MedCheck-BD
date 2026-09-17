@@ -42,12 +42,12 @@
           </div>
         </div>
 
-        <form onsubmit="handleLogin(event)">
+        <form autocomplete="on" onsubmit="handleLogin(event)">
           <div class="mb-3">
             <label class="form-label fw-bold text-navy small">Email Address</label>
             <div class="input-group">
               <span class="input-group-text bg-white"><i class="fas fa-envelope text-muted"></i></span>
-              <input type="email" id="loginEmail" class="form-control" placeholder="e.g. customer@gmail.com" required>
+              <input type="email" id="loginEmail" name="username" autocomplete="username" class="form-control" placeholder="e.g. customer@gmail.com" required>
             </div>
           </div>
 
@@ -55,7 +55,7 @@
             <label class="form-label fw-bold text-navy small">Password</label>
             <div class="input-group">
               <span class="input-group-text bg-white"><i class="fas fa-lock text-muted"></i></span>
-              <input type="password" id="loginPassword" class="form-control" placeholder="••••••••" required>
+              <input type="password" id="loginPassword" name="password" autocomplete="current-password" class="form-control" placeholder="••••••••" required>
             </div>
           </div>
 

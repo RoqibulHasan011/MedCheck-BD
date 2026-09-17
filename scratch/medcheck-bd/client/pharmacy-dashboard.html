@@ -18,277 +18,191 @@
       <!-- Header Banner -->
       <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-3">
         <div>
-          <h2 class="fw-bold text-navy mb-1" id="pharmacyDashboardTitle">Pharmacy Portal</h2>
-          <p class="text-muted small mb-0">Inventory control, batch expiry tracking, and digital point-of-sale receipt engine.</p>
+          <div class="d-flex align-items-center gap-2 mb-1">
+            <h2 class="fw-bold text-navy mb-0" id="pharmacyDashboardTitle">Pharmacy Portal</h2>
+          </div>
+          <p class="text-muted small mb-0">Operations hub, real-time KPI surveillance, and dispensary navigation center.</p>
         </div>
-        <div class="d-flex gap-2">
-          <button class="btn btn-success-custom btn-sm" data-bs-toggle="modal" data-bs-target="#recordSaleModal">
-            <i class="fas fa-cash-register me-1"></i> Record Sale / POS
-          </button>
-          <button class="btn btn-primary-custom btn-sm" data-bs-toggle="modal" data-bs-target="#addInventoryModal">
-            <i class="fas fa-plus me-1"></i> Add Medicine Stock
-          </button>
+        <div>
+          <a href="pharmacy-inventory.html" class="btn btn-primary-custom btn-sm">
+            <i class="fas fa-boxes me-1"></i> Manage Stock
+          </a>
         </div>
       </div>
 
-      <!-- Metric Cards -->
+      <!-- Executive KPI Metric Cards -->
       <div class="row g-3 mb-4">
         <div class="col-lg-3 col-sm-6">
-          <div class="card-custom p-3 bg-white">
-            <div class="d-flex align-items-center justify-content-between">
-              <div>
-                <span class="text-muted small fw-bold">Total Stocked</span>
-                <h3 class="fw-bold text-navy mb-0 mt-1" id="statTotalMedicines">0</h3>
-              </div>
-              <div class="rounded-circle bg-primary bg-opacity-10 text-primary p-3">
-                <i class="fas fa-boxes fa-lg"></i>
+          <a href="pharmacy-inventory.html" class="text-decoration-none">
+            <div class="card-custom p-3 bg-white shadow-sm h-100 transition-card">
+              <div class="d-flex align-items-center justify-content-between">
+                <div>
+                  <span class="text-muted small fw-bold">Total Stocked</span>
+                  <h3 class="fw-bold text-navy mb-0 mt-1" id="statTotalMedicines">0</h3>
+                  <small class="text-primary fw-semibold">View Inventory &rarr;</small>
+                </div>
+                <div class="rounded-circle bg-primary bg-opacity-10 text-primary p-3">
+                  <i class="fas fa-boxes fa-lg"></i>
+                </div>
               </div>
             </div>
-          </div>
+          </a>
         </div>
 
         <div class="col-lg-3 col-sm-6">
-          <div class="card-custom p-3 bg-white">
-            <div class="d-flex align-items-center justify-content-between">
-              <div>
-                <span class="text-muted small fw-bold">Low Stock (&lt;10)</span>
-                <h3 class="fw-bold text-warning mb-0 mt-1" id="statLowStock">0</h3>
-              </div>
-              <div class="rounded-circle bg-warning bg-opacity-10 text-warning p-3">
-                <i class="fas fa-exclamation-triangle fa-lg"></i>
+          <a href="pharmacy-inventory.html" class="text-decoration-none">
+            <div class="card-custom p-3 bg-white shadow-sm h-100 transition-card">
+              <div class="d-flex align-items-center justify-content-between">
+                <div>
+                  <span class="text-muted small fw-bold">Low Stock (&lt;10)</span>
+                  <h3 class="fw-bold text-warning mb-0 mt-1" id="statLowStock">0</h3>
+                  <small class="text-warning fw-semibold">Needs Restock &rarr;</small>
+                </div>
+                <div class="rounded-circle bg-warning bg-opacity-10 text-warning p-3">
+                  <i class="fas fa-exclamation-triangle fa-lg"></i>
+                </div>
               </div>
             </div>
-          </div>
+          </a>
         </div>
 
         <div class="col-lg-3 col-sm-6">
-          <div class="card-custom p-3 bg-white">
-            <div class="d-flex align-items-center justify-content-between">
-              <div>
-                <span class="text-muted small fw-bold">Expiring & Expired</span>
-                <h3 class="fw-bold text-danger mb-0 mt-1" id="statExpiring">0</h3>
-              </div>
-              <div class="rounded-circle bg-danger bg-opacity-10 text-danger p-3">
-                <i class="fas fa-calendar-times fa-lg"></i>
+          <a href="pharmacy-alerts.html" class="text-decoration-none">
+            <div class="card-custom p-3 bg-white shadow-sm h-100 transition-card">
+              <div class="d-flex align-items-center justify-content-between">
+                <div>
+                  <span class="text-muted small fw-bold">Expiring & Expired</span>
+                  <h3 class="fw-bold text-danger mb-0 mt-1" id="statExpiring">0</h3>
+                  <small class="text-danger fw-semibold">Review Alerts &rarr;</small>
+                </div>
+                <div class="rounded-circle bg-danger bg-opacity-10 text-danger p-3">
+                  <i class="fas fa-calendar-times fa-lg"></i>
+                </div>
               </div>
             </div>
-          </div>
+          </a>
         </div>
 
-        <div class="col-lg-3 col-sm-6">
-          <div class="card-custom p-3 bg-white">
-            <div class="d-flex align-items-center justify-content-between">
-              <div>
-                <span class="text-muted small fw-bold">Today's Transactions</span>
-                <h3 class="fw-bold text-success mb-0 mt-1" id="statTodaySales">Live</h3>
-              </div>
-              <div class="rounded-circle bg-success bg-opacity-10 text-success p-3">
-                <i class="fas fa-receipt fa-lg"></i>
-              </div>
-            </div>
-          </div>
-        </div>
       </div>
 
-      <!-- Critical Alerts Panel -->
-      <div class="card-custom p-3 bg-white mb-4">
-        <h6 class="fw-bold text-navy mb-2"><i class="fas fa-bell text-danger me-2"></i>Inventory & Expiry Safety Alerts</h6>
+      <!-- Critical Alerts Notification Bar -->
+      <div class="card-custom p-3 bg-white mb-4 shadow-sm">
+        <div class="d-flex justify-content-between align-items-center mb-2">
+          <h6 class="fw-bold text-navy mb-0">
+            <i class="fas fa-bell text-danger me-2"></i>Critical Safety & Batch Surveillance
+          </h6>
+          <a href="pharmacy-alerts.html" class="btn btn-outline-danger btn-sm py-1 px-3">
+            <i class="fas fa-shield-alt me-1"></i> Full Alerts Page &rarr;
+          </a>
+        </div>
         <div id="pharmacyAlertsContainer">
           <div class="text-center py-2 text-muted small">Checking stock and batch expiry thresholds...</div>
         </div>
       </div>
 
-      <!-- Inventory Table -->
-      <div class="card-custom p-4 bg-white mb-4">
-        <div class="d-flex flex-wrap justify-content-between align-items-center mb-3 gap-2">
-          <div>
-            <h5 class="fw-bold text-navy mb-0"><i class="fas fa-warehouse text-primary me-2"></i>Current Medicine Inventory</h5>
-            <small class="text-muted">Live stock quantities, purchase/selling prices, and batch audit status.</small>
+      <!-- Module Gateway Cards (Launchpad to Dedicated Modules) -->
+      <h5 class="fw-bold text-navy mb-3">
+        <i class="fas fa-th-large text-primary me-2"></i>Dispensary Functional Modules
+      </h5>
+      <div class="row g-3 mb-4">
+        <div class="col-md-4">
+          <div class="card-custom p-4 bg-white shadow-sm h-100 d-flex flex-column justify-content-between">
+            <div>
+              <div class="d-flex align-items-center justify-content-between mb-3">
+                <span class="badge bg-primary bg-opacity-10 text-primary fw-bold text-uppercase px-3 py-1 rounded-pill">
+                  <i class="fas fa-boxes me-1"></i> Stock Registry
+                </span>
+                <div class="rounded-circle bg-primary bg-opacity-10 text-primary p-2">
+                  <i class="fas fa-warehouse fa-lg"></i>
+                </div>
+              </div>
+              <h5 class="fw-bold text-navy mb-2">Live Stock Inventory</h5>
+              <p class="text-muted small mb-4">
+                Update stock quantities, set selling & purchase prices, track batch codes, and filter low/expiring inventory.
+              </p>
+            </div>
+            <div>
+              <a href="pharmacy-inventory.html" class="btn btn-primary-custom w-100 btn-sm py-2 fw-bold">
+                Open Stock Inventory &rarr;
+              </a>
+            </div>
           </div>
-          <button class="btn btn-outline-secondary btn-sm" onclick="loadPharmacyStatsAndInventory()">
-            <i class="fas fa-sync-alt me-1"></i> Refresh Stock
-          </button>
         </div>
 
-        <div class="table-responsive">
-          <table class="table table-custom align-middle mb-0">
-            <thead>
-              <tr>
-                <th>Medicine & Generic</th>
-                <th>Batch No</th>
-                <th>Expiry Date</th>
-                <th>Units In Stock</th>
-                <th>Purchase (৳)</th>
-                <th>Selling (৳)</th>
-                <th>Status</th>
-                <th class="text-end">Actions</th>
-              </tr>
-            </thead>
-            <tbody id="inventoryTableBody">
-              <tr><td colspan="8" class="text-center py-4 text-muted">Loading inventory records...</td></tr>
-            </tbody>
-          </table>
+        <div class="col-md-4">
+          <div class="card-custom p-4 bg-white shadow-sm h-100 d-flex flex-column justify-content-between">
+            <div>
+              <div class="d-flex align-items-center justify-content-between mb-3">
+                <span class="badge bg-success bg-opacity-10 text-success fw-bold text-uppercase px-3 py-1 rounded-pill">
+                  <i class="fas fa-cash-register me-1"></i> POS & Orders
+                </span>
+                <div class="rounded-circle bg-success bg-opacity-10 text-success p-2">
+                  <i class="fas fa-file-invoice-dollar fa-lg"></i>
+                </div>
+              </div>
+              <h5 class="fw-bold text-navy mb-2">Sales & Customer Orders</h5>
+              <p class="text-muted small mb-4">
+                Dispense counter medicines, fulfill customer online orders, accept digital payments, and print official receipts.
+              </p>
+            </div>
+            <div>
+              <a href="pharmacy-sales.html" class="btn btn-success-custom w-100 btn-sm py-2 fw-bold">
+                Open Sales & Orders Ledger &rarr;
+              </a>
+            </div>
+          </div>
         </div>
+
+        <div class="col-md-4">
+          <div class="card-custom p-4 bg-white shadow-sm h-100 d-flex flex-column justify-content-between">
+            <div>
+              <div class="d-flex align-items-center justify-content-between mb-3">
+                <span class="badge bg-danger bg-opacity-10 text-danger fw-bold text-uppercase px-3 py-1 rounded-pill">
+                  <i class="fas fa-shield-alt me-1"></i> Compliance
+                </span>
+                <div class="rounded-circle bg-danger bg-opacity-10 text-danger p-2">
+                  <i class="fas fa-bell fa-lg"></i>
+                </div>
+              </div>
+              <h5 class="fw-bold text-navy mb-2">Expiry & Safety Alerts</h5>
+              <p class="text-muted small mb-4">
+                Surveillance for expiring batches under 60 days, banned drug recall notices, and DGDA storage guidelines.
+              </p>
+            </div>
+            <div>
+              <a href="pharmacy-alerts.html" class="btn btn-outline-danger w-100 btn-sm py-2 fw-bold">
+                Open Safety Alerts &rarr;
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Compact Activity Snapshot (Low Stock & Recent Sales side-by-side) -->
+      <div class="row g-4 mb-4">
+        <!-- Urgent Attention Snapshot -->
+        <div class="col-lg-6">
+          <div class="card-custom p-4 bg-white shadow-sm h-100">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+              <div>
+                <h6 class="fw-bold text-navy mb-0">
+                  <i class="fas fa-exclamation-circle text-warning me-2"></i>Urgent Stock Attention
+                </h6>
+                <small class="text-muted">Items low in stock (&lt;10 units) or expiring soon</small>
+              </div>
+              <a href="pharmacy-inventory.html" class="btn btn-outline-primary btn-sm py-0 px-2">
+                All Stock &rarr;
+              </a>
+            </div>
+            <div id="dashboardLowStockList">
+              <div class="text-center py-4 text-muted small"><div class="spinner-border spinner-border-sm text-primary me-2"></div>Checking inventory...</div>
+            </div>
+          </div>
+        </div>
+
       </div>
     </div>
   </main>
-
-  <!-- MODAL: Add Inventory Stock -->
-  <div class="modal fade" id="addInventoryModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content border-0 shadow-lg">
-        <div class="modal-header bg-primary text-white">
-          <h5 class="modal-title fw-bold"><i class="fas fa-plus-circle me-2"></i>Add Medicine to Inventory</h5>
-          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-        </div>
-        <form id="addInventoryForm" onsubmit="handleAddInventory(event)">
-          <div class="modal-body">
-            <div class="mb-3">
-              <label class="form-label fw-bold text-navy small">Select Medicine *</label>
-              <select id="addInvMedicineSelect" class="form-select" required>
-                <option value="">Loading medicines...</option>
-              </select>
-            </div>
-            <div class="row g-2 mb-3">
-              <div class="col-6">
-                <label class="form-label fw-bold text-navy small">Batch Number *</label>
-                <input type="text" id="addInvBatchNumber" class="form-control font-monospace" placeholder="e.g. NP-2026-05" required>
-              </div>
-              <div class="col-6">
-                <label class="form-label fw-bold text-navy small">Expiry Date *</label>
-                <input type="date" id="addInvExpiryDate" class="form-control" required>
-              </div>
-            </div>
-            <div class="row g-2 mb-3">
-              <div class="col-4">
-                <label class="form-label fw-bold text-navy small">Quantity *</label>
-                <input type="number" id="addInvQuantity" class="form-control" placeholder="50" min="1" required>
-              </div>
-              <div class="col-4">
-                <label class="form-label fw-bold text-navy small">Purchase ৳</label>
-                <input type="number" step="0.01" id="addInvPurchasePrice" class="form-control" placeholder="1.00">
-              </div>
-              <div class="col-4">
-                <label class="form-label fw-bold text-navy small">Selling ৳ *</label>
-                <input type="number" step="0.01" id="addInvSellingPrice" class="form-control" placeholder="1.20" required>
-              </div>
-            </div>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-light btn-sm" data-bs-dismiss="modal">Cancel</button>
-            <button type="submit" class="btn btn-primary-custom btn-sm">Save to Stock</button>
-          </div>
-        </form>
-      </div>
-    </div>
-  </div>
-
-  <!-- MODAL: Edit Inventory Item -->
-  <div class="modal fade" id="editInventoryModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content border-0 shadow-lg">
-        <div class="modal-header bg-navy-dark text-white">
-          <h5 class="modal-title fw-bold"><i class="fas fa-edit me-2"></i>Update Stock & Price</h5>
-          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-        </div>
-        <form onsubmit="handleUpdateInventory(event)">
-          <input type="hidden" id="editInvId">
-          <div class="modal-body">
-            <div class="mb-3">
-              <label class="form-label fw-bold text-navy small">Available Quantity</label>
-              <input type="number" id="editInvQuantity" class="form-control" min="0" required>
-            </div>
-            <div class="row g-2 mb-3">
-              <div class="col-6">
-                <label class="form-label fw-bold text-navy small">Purchase Price (৳)</label>
-                <input type="number" step="0.01" id="editInvPurchasePrice" class="form-control" required>
-              </div>
-              <div class="col-6">
-                <label class="form-label fw-bold text-navy small">Selling Price (৳)</label>
-                <input type="number" step="0.01" id="editInvSellingPrice" class="form-control" required>
-              </div>
-            </div>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-light btn-sm" data-bs-dismiss="modal">Cancel</button>
-            <button type="submit" class="btn btn-primary-custom btn-sm">Save Changes</button>
-          </div>
-        </form>
-      </div>
-    </div>
-  </div>
-
-  <!-- MODAL: Record Sale / POS System -->
-  <div class="modal fade" id="recordSaleModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-lg">
-      <div class="modal-content border-0 shadow-lg">
-        <div class="modal-header bg-success text-white">
-          <h5 class="modal-title fw-bold"><i class="fas fa-cash-register me-2"></i>Record New Sale & Issue Digital Receipt</h5>
-          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-        </div>
-        <form id="posSaleForm" onsubmit="handleRecordSale(event)">
-          <div class="modal-body">
-            <div class="row g-3 mb-3">
-              <div class="col-md-6">
-                <label class="form-label fw-bold text-navy small">Customer Name (Optional)</label>
-                <input type="text" id="posCustomerName" class="form-control" placeholder="Walk-in Customer">
-              </div>
-              <div class="col-md-6">
-                <label class="form-label fw-bold text-navy small">Customer Mobile (For history linkage)</label>
-                <input type="tel" id="posCustomerPhone" class="form-control" placeholder="+8801711000000">
-              </div>
-            </div>
-
-            <div class="mb-3">
-              <label class="form-label fw-bold text-navy small">Customer Email (Optional)</label>
-              <input type="email" id="posCustomerEmail" class="form-control" placeholder="e.g. customer@gmail.com">
-            </div>
-
-            <hr class="my-3">
-
-            <div class="row g-3 mb-3">
-              <div class="col-md-6">
-                <label class="form-label fw-bold text-navy small">Dispense Medicine *</label>
-                <select id="posMedicineSelect" class="form-select" required>
-                  <option value="">Select Medicine...</option>
-                </select>
-              </div>
-              <div class="col-md-3">
-                <label class="form-label fw-bold text-navy small">Batch Code</label>
-                <input type="text" id="posBatchNumber" class="form-control font-monospace" placeholder="e.g. NAPA-2026-01">
-              </div>
-              <div class="col-md-3">
-                <label class="form-label fw-bold text-navy small">Quantity *</label>
-                <input type="number" id="posQuantity" class="form-control" min="1" value="1" required>
-              </div>
-            </div>
-
-            <div class="row g-3">
-              <div class="col-md-6">
-                <label class="form-label fw-bold text-navy small">Payment Mode</label>
-                <select id="posPaymentMethod" class="form-select">
-                  <option value="Cash">Cash</option>
-                  <option value="bKash">bKash</option>
-                  <option value="Nagad">Nagad</option>
-                  <option value="Card">Debit / Credit Card</option>
-                </select>
-              </div>
-              <div class="col-md-6">
-                <label class="form-label fw-bold text-navy small">Discount (৳)</label>
-                <input type="number" step="0.5" id="posDiscount" class="form-control" value="0">
-              </div>
-            </div>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-light btn-sm" data-bs-dismiss="modal">Close</button>
-            <button type="submit" id="recordSaleBtn" class="btn btn-success-custom btn-sm">
-              <i class="fas fa-receipt me-1"></i> Complete Sale & Print Receipt
-            </button>
-          </div>
-        </form>
-      </div>
-    </div>
-  </div>
 
   <!-- Dynamic Footer -->
   <div id="mainFooter"></div>

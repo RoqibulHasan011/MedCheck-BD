@@ -242,7 +242,10 @@ function renderMatchResult(data) {
           <tbody>
             ${availablePharmacies
               .map(
-                (p) => `
+                (p) => {
+                  const loggedUser = typeof getCurrentUser === 'function' ? getCurrentUser() : null;
+                  const canBuyOnline = !loggedUser || (loggedUser.role !== 'pharmacy' && loggedUser.role !== 'admin');
+                  return `
               <tr>
                 <td class="fw-bold">
                   <a href="pharmacy-details.html?id=${p.pharmacyId}" class="text-decoration-none text-dark">
@@ -253,6 +256,7 @@ function renderMatchResult(data) {
                 <td><span class="badge ${p.quantity < 10 ? 'bg-warning text-dark' : 'bg-success'}">${p.quantity} Units</span></td>
                 <td class="fw-bold text-primary">${formatBDT(p.price)}</td>
                 <td class="text-nowrap">
+                  ${canBuyOnline ? `
                   <button class="btn btn-primary-custom btn-sm py-0 px-2 me-1" onclick='openCustomerOrderModal(${JSON.stringify({
                     medicineId: medicine.id,
                     medicineName: medicine.name,
@@ -267,10 +271,12 @@ function renderMatchResult(data) {
                   }).replace(/'/g, "&apos;")})'>
                     <i class="fas fa-shopping-cart me-1"></i>Buy
                   </button>
-                  <a href="pharmacy-details.html?id=${p.pharmacyId}" class="btn btn-outline-secondary btn-sm py-0 px-2">Details</a>
+                  ` : ''}
+                  <a href="pharmacy-details.html?id=${p.pharmacyId}" class="btn btn-outline-secondary btn-sm py-0 px-2">${canBuyOnline ? 'Details' : '<i class="fas fa-store me-1"></i>View Store'}</a>
                 </td>
               </tr>
-            `
+            `;
+                }
               )
               .join('')}
           </tbody>

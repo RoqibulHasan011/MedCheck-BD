@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Stock Inventory - MedCheck BD Pharmacy Portal</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="bg-light">
+
+  <!-- Dynamic Navbar -->
+  <div id="mainNavbar"></div>
+
+  <main class="py-5">
+    <div class="container">
+      <!-- Breadcrumb Navigation -->
+      <nav aria-label="breadcrumb" class="mb-3">
+        <ol class="breadcrumb small">
+          <li class="breadcrumb-item"><a href="pharmacy-dashboard.html" class="text-decoration-none">Dashboard</a></li>
+          <li class="breadcrumb-item active fw-bold" aria-current="page">Stock Inventory</li>
+        </ol>
+      </nav>
+
+      <!-- Header Banner -->
+      <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-3">
+        <div>
+          <span class="badge bg-primary bg-opacity-10 text-primary fw-bold text-uppercase px-3 py-1 rounded-pill mb-1">
+            <i class="fas fa-boxes me-1"></i> Stock Registry
+          </span>
+          <h2 class="fw-bold text-navy mb-1">Live Medicine Stock Inventory</h2>
+          <p class="text-muted small mb-0">Manage current pharmacy stock levels, update batch records, selling prices, and DGDA regulatory compliance.</p>
+        </div>
+        <div class="d-flex gap-2">
+          <button class="btn btn-primary-custom btn-sm" data-bs-toggle="modal" data-bs-target="#addInventoryModal">
+            <i class="fas fa-plus me-1"></i> Add Medicine Stock
+          </button>
+          <button class="btn btn-outline-secondary btn-sm" onclick="loadPharmacyStatsAndInventory()">
+            <i class="fas fa-sync-alt me-1"></i> Refresh
+          </button>
+        </div>
+      </div>
+
+      <!-- Quick Inventory Metrics Summary -->
+      <div class="row g-3 mb-4">
+        <div class="col-md-4">
+          <div class="card-custom p-3 bg-white d-flex align-items-center justify-content-between shadow-sm">
+            <div>
+              <span class="text-muted small fw-bold">Total Stocked Medicines</span>
+              <h3 class="fw-bold text-navy mb-0 mt-1" id="statTotalMedicines">0</h3>
+            </div>
+            <div class="rounded-circle bg-primary bg-opacity-10 text-primary p-3">
+              <i class="fas fa-boxes fa-lg"></i>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="card-custom p-3 bg-white d-flex align-items-center justify-content-between shadow-sm">
+            <div>
+              <span class="text-muted small fw-bold">Low Stock Alert (&lt; 10 units)</span>
+              <h3 class="fw-bold text-warning mb-0 mt-1" id="statLowStock">0</h3>
+            </div>
+            <div class="rounded-circle bg-warning bg-opacity-10 text-warning p-3">
+              <i class="fas fa-exclamation-triangle fa-lg"></i>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="card-custom p-3 bg-white d-flex align-items-center justify-content-between shadow-sm">
+            <div>
+              <span class="text-muted small fw-bold">Expiring & Expired Batches</span>
+              <h3 class="fw-bold text-danger mb-0 mt-1" id="statExpiring">0</h3>
+            </div>
+            <div class="rounded-circle bg-danger bg-opacity-10 text-danger p-3">
+              <i class="fas fa-calendar-times fa-lg"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Inventory Table Container -->
+      <div class="card-custom p-4 bg-white shadow-sm mb-4">
+        <!-- Search & Filter Controls -->
+        <div class="row g-2 mb-3">
+          <div class="col-md-8">
+            <div class="input-group input-group-sm">
+              <span class="input-group-text bg-white"><i class="fas fa-search text-muted"></i></span>
+              <input type="text" id="searchInventoryInput" class="form-control" placeholder="Search stocked medicine name, generic name, or batch number..." oninput="filterInventoryTable()">
+            </div>
+          </div>
+          <div class="col-md-4">
+            <select id="filterInventoryStatus" class="form-select form-select-sm" onchange="filterInventoryTable()">
+              <option value="ALL">All Stock Statuses</option>
+              <option value="IN_STOCK">In Stock (>= 10)</option>
+              <option value="LOW_STOCK">Low Stock (&lt; 10)</option>
+              <option value="EXPIRING">Expiring Soon (&lt;= 60 Days)</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Stock Table -->
+        <div class="table-responsive">
+          <table class="table table-custom align-middle mb-0">
+            <thead>
+              <tr>
+                <th>Medicine & Generic</th>
+                <th>Batch No</th>
+                <th>Expiry Date</th>
+                <th>Units In Stock</th>
+                <th>Purchase (৳)</th>
+                <th>Selling (৳)</th>
+                <th>Status</th>
+                <th class="text-end">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="inventoryTableBody">
+              <tr><td colspan="8" class="text-center py-4 text-muted"><div class="spinner-border spinner-border-sm text-primary me-2"></div>Loading inventory records...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- MODAL: Add Inventory Stock -->
+  <div class="modal fade" id="addInventoryModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content border-0 shadow-lg">
+        <div class="modal-header bg-primary text-white">
+          <h5 class="modal-title fw-bold"><i class="fas fa-plus-circle me-2"></i>Add Medicine to Inventory</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+        </div>
+        <form id="addInventoryForm" onsubmit="handleAddInventory(event)">
+          <div class="modal-body">
+            <div class="mb-3">
+              <label class="form-label fw-bold text-navy small">Select Medicine *</label>
+              <select id="addInvMedicineSelect" class="form-select" required>
+                <option value="">Loading medicines...</option>
+              </select>
+            </div>
+            <div class="row g-2 mb-3">
+              <div class="col-6">
+                <label class="form-label fw-bold text-navy small">Batch Number *</label>
+                <input type="text" id="addInvBatchNumber" class="form-control font-monospace" placeholder="e.g. NP-2026-05" required>
+              </div>
+              <div class="col-6">
+                <label class="form-label fw-bold text-navy small">Expiry Date *</label>
+                <input type="date" id="addInvExpiryDate" class="form-control" required>
+              </div>
+            </div>
+            <div class="row g-2 mb-3">
+              <div class="col-4">
+                <label class="form-label fw-bold text-navy small">Quantity *</label>
+                <input type="number" id="addInvQuantity" class="form-control" placeholder="50" min="1" required>
+              </div>
+              <div class="col-4">
+                <label class="form-label fw-bold text-navy small">Purchase ৳</label>
+                <input type="number" step="0.01" id="addInvPurchasePrice" class="form-control" placeholder="1.00">
+              </div>
+              <div class="col-4">
+                <label class="form-label fw-bold text-navy small">Selling ৳ *</label>
+                <input type="number" step="0.01" id="addInvSellingPrice" class="form-control" placeholder="1.20" required>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-light btn-sm" data-bs-dismiss="modal">Cancel</button>
+            <button type="submit" class="btn btn-primary-custom btn-sm">Save to Stock</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: Edit Inventory Item -->
+  <div class="modal fade" id="editInventoryModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content border-0 shadow-lg">
+        <div class="modal-header bg-navy-dark text-white">
+          <h5 class="modal-title fw-bold"><i class="fas fa-edit me-2"></i>Update Stock & Price</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+        </div>
+        <form onsubmit="handleUpdateInventory(event)">
+          <input type="hidden" id="editInvId">
+          <div class="modal-body">
+            <div class="mb-3">
+              <label class="form-label fw-bold text-navy small">Available Quantity</label>
+              <input type="number" id="editInvQuantity" class="form-control" min="0" required>
+            </div>
+            <div class="row g-2 mb-3">
+              <div class="col-6">
+                <label class="form-label fw-bold text-navy small">Purchase Price (৳)</label>
+                <input type="number" step="0.01" id="editInvPurchasePrice" class="form-control" required>
+              </div>
+              <div class="col-6">
+                <label class="form-label fw-bold text-navy small">Selling Price (৳)</label>
+                <input type="number" step="0.01" id="editInvSellingPrice" class="form-control" required>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-light btn-sm" data-bs-dismiss="modal">Cancel</button>
+            <button type="submit" class="btn btn-primary-custom btn-sm">Save Changes</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Dynamic Footer -->
+  <div id="mainFooter"></div>
+
+  <!-- Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="js/main.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/inventory.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      initPharmacyInventoryPage();
+    });
+  </script>
+</body>
+</html>

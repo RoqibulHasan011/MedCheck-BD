@@ -24,7 +24,7 @@
             <i class="fas fa-shield-alt me-1"></i> Central Governance Portal
           </span>
           <h2 class="fw-bold text-navy mb-0">System Administration & Oversight</h2>
-          <small class="text-muted">Review pharmacy approvals, medicine registries, safety reports, and access logs.</small>
+          <small class="text-muted">Centralized health-tech control, DGDA compliance auditing, and administrative module launchpad.</small>
         </div>
         <div class="d-flex gap-2">
           <button class="btn btn-primary-custom btn-sm" data-bs-toggle="modal" data-bs-target="#addMedicineModal">
@@ -36,193 +36,191 @@
       <!-- KPI Metric Cards -->
       <div class="row g-3 mb-4">
         <div class="col-lg-2 col-md-4 col-6">
-          <div class="card-custom p-3 bg-white text-center">
+          <div class="card-custom p-3 bg-white text-center shadow-sm h-100">
             <span class="text-muted small fw-bold">Total Users</span>
             <h3 class="fw-bold text-navy mb-0 mt-1" id="adminStatUsers">0</h3>
           </div>
         </div>
         <div class="col-lg-2 col-md-4 col-6">
-          <div class="card-custom p-3 bg-white text-center">
-            <span class="text-muted small fw-bold">Pharmacies</span>
-            <h3 class="fw-bold text-primary mb-0 mt-1" id="adminStatPharmacies">0</h3>
-          </div>
+          <a href="admin-approvals.html" class="text-decoration-none">
+            <div class="card-custom p-3 bg-white text-center shadow-sm h-100 transition-card">
+              <span class="text-muted small fw-bold">Pharmacies</span>
+              <h3 class="fw-bold text-primary mb-0 mt-1" id="adminStatPharmacies">0</h3>
+            </div>
+          </a>
         </div>
         <div class="col-lg-2 col-md-4 col-6">
-          <div class="card-custom p-3 bg-white text-center">
-            <span class="text-muted small fw-bold">Verified Stores</span>
-            <h3 class="fw-bold text-success mb-0 mt-1" id="adminStatVerified">0</h3>
-          </div>
+          <a href="admin-approvals.html" class="text-decoration-none">
+            <div class="card-custom p-3 bg-white text-center shadow-sm h-100 transition-card">
+              <span class="text-muted small fw-bold">Verified Stores</span>
+              <h3 class="fw-bold text-success mb-0 mt-1" id="adminStatVerified">0</h3>
+            </div>
+          </a>
         </div>
         <div class="col-lg-2 col-md-4 col-6">
-          <div class="card-custom p-3 bg-white text-center">
-            <span class="text-muted small fw-bold">Medicines</span>
-            <h3 class="fw-bold text-navy mb-0 mt-1" id="adminStatMedicines">0</h3>
-          </div>
+          <a href="admin-medicines.html" class="text-decoration-none">
+            <div class="card-custom p-3 bg-white text-center shadow-sm h-100 transition-card">
+              <span class="text-muted small fw-bold">Medicines</span>
+              <h3 class="fw-bold text-navy mb-0 mt-1" id="adminStatMedicines">0</h3>
+            </div>
+          </a>
         </div>
         <div class="col-lg-2 col-md-4 col-6">
-          <div class="card-custom p-3 bg-white text-center">
-            <span class="text-muted small fw-bold">Reports Filed</span>
-            <h3 class="fw-bold text-warning mb-0 mt-1" id="adminStatReports">0</h3>
-          </div>
+          <a href="admin-reports.html" class="text-decoration-none">
+            <div class="card-custom p-3 bg-white text-center shadow-sm h-100 transition-card">
+              <span class="text-muted small fw-bold">Reports Filed</span>
+              <h3 class="fw-bold text-warning mb-0 mt-1" id="adminStatReports">0</h3>
+            </div>
+          </a>
         </div>
         <div class="col-lg-2 col-md-4 col-6">
-          <div class="card-custom p-3 bg-white text-center">
-            <span class="text-muted small fw-bold">Active Alerts</span>
-            <h3 class="fw-bold text-danger mb-0 mt-1" id="adminStatAlerts">0</h3>
-          </div>
+          <a href="admin-reports.html" class="text-decoration-none">
+            <div class="card-custom p-3 bg-white text-center shadow-sm h-100 transition-card">
+              <span class="text-muted small fw-bold">Active Alerts</span>
+              <h3 class="fw-bold text-danger mb-0 mt-1" id="adminStatAlerts">0</h3>
+            </div>
+          </a>
         </div>
       </div>
 
-      <!-- Chart.js Visualizations Section -->
-      <div class="row g-4 mb-5">
+      <!-- Chart.js Visual Analytics Section -->
+      <div class="row g-4 mb-4" id="overviewSection">
         <div class="col-lg-4">
-          <div class="card-custom p-4 bg-white h-100">
+          <div class="card-custom admin-chart-card p-4 bg-white h-100 shadow-sm">
             <h6 class="fw-bold text-navy mb-3"><i class="fas fa-chart-pie text-danger me-2"></i>Reports by Category</h6>
-            <div style="height: 250px;">
+            <div class="admin-chart-container">
               <canvas id="reportsCategoryChart"></canvas>
             </div>
           </div>
         </div>
         <div class="col-lg-4">
-          <div class="card-custom p-4 bg-white h-100">
+          <div class="card-custom admin-chart-card p-4 bg-white h-100 shadow-sm">
             <h6 class="fw-bold text-navy mb-3"><i class="fas fa-chart-bar text-primary me-2"></i>Pharmacies by Location</h6>
-            <div style="height: 250px;">
+            <div class="admin-chart-container">
               <canvas id="pharmacyAreaChart"></canvas>
             </div>
           </div>
         </div>
         <div class="col-lg-4">
-          <div class="card-custom p-4 bg-white h-100">
+          <div class="card-custom admin-chart-card p-4 bg-white h-100 shadow-sm">
             <h6 class="fw-bold text-navy mb-3"><i class="fas fa-pills text-success me-2"></i>Medicines by Category</h6>
-            <div style="height: 250px;">
+            <div class="admin-chart-container">
               <canvas id="medicineCategoryChart"></canvas>
             </div>
           </div>
         </div>
       </div>
 
-      <!-- Section: Pending Pharmacy Approvals -->
-      <div class="card-custom p-4 bg-white mb-5">
-        <div class="d-flex justify-content-between align-items-center mb-3">
-          <div>
-            <h5 class="fw-bold text-navy mb-0"><i class="fas fa-user-check text-success me-2"></i>Pending Pharmacy Applications</h5>
-            <small class="text-muted">Inspect DGDA drug licenses and authorize Verified Pharmacy credentials.</small>
+      <!-- Module Gateway Cards (Launchpad to Dedicated Modules) -->
+      <h5 class="fw-bold text-navy mb-3">
+        <i class="fas fa-th-large text-primary me-2"></i>Governance Modules
+      </h5>
+      <div class="row g-3 mb-4">
+        <div class="col-md-3 col-sm-6">
+          <div class="card-custom p-3 bg-white shadow-sm h-100 d-flex flex-column justify-content-between">
+            <div>
+              <div class="d-flex align-items-center justify-content-between mb-2">
+                <span class="badge bg-success bg-opacity-10 text-success fw-bold">DGDA Verification</span>
+                <i class="fas fa-user-check text-success fa-lg"></i>
+              </div>
+              <h6 class="fw-bold text-navy mb-1">Pharmacy Approvals</h6>
+              <p class="text-muted small mb-3">Inspect drug license credentials and authorize verified pharmacies.</p>
+            </div>
+            <a href="admin-approvals.html" class="btn btn-outline-success btn-sm w-100 fw-bold">
+              Open Approvals &rarr;
+            </a>
           </div>
-          <button class="btn btn-outline-secondary btn-sm" onclick="loadPendingPharmacies()">
-            <i class="fas fa-sync-alt me-1"></i> Refresh
-          </button>
         </div>
 
-        <div class="table-responsive">
-          <table class="table table-custom align-middle mb-0">
-            <thead>
-              <tr>
-                <th>Pharmacy Trade Name</th>
-                <th>Owner / Manager</th>
-                <th>Drug License</th>
-                <th>Area / Division</th>
-                <th>Status</th>
-                <th class="text-end">Verification Action</th>
-              </tr>
-            </thead>
-            <tbody id="pendingPharmaciesTable">
-              <tr><td colspan="6" class="text-center py-3 text-muted">Checking pending registrations...</td></tr>
-            </tbody>
-          </table>
+        <div class="col-md-3 col-sm-6">
+          <div class="card-custom p-3 bg-white shadow-sm h-100 d-flex flex-column justify-content-between">
+            <div>
+              <div class="d-flex align-items-center justify-content-between mb-2">
+                <span class="badge bg-primary bg-opacity-10 text-primary fw-bold">Formulary</span>
+                <i class="fas fa-pills text-primary fa-lg"></i>
+              </div>
+              <h6 class="fw-bold text-navy mb-1">Medicine Database</h6>
+              <p class="text-muted small mb-3">Maintain DAR registration codes, dosage forms, and reference prices.</p>
+            </div>
+            <a href="admin-medicines.html" class="btn btn-outline-primary btn-sm w-100 fw-bold">
+              Open Registry &rarr;
+            </a>
+          </div>
+        </div>
+
+        <div class="col-md-3 col-sm-6">
+          <div class="card-custom p-3 bg-white shadow-sm h-100 d-flex flex-column justify-content-between">
+            <div>
+              <div class="d-flex align-items-center justify-content-between mb-2">
+                <span class="badge bg-danger bg-opacity-10 text-danger fw-bold">Vigilance</span>
+                <i class="fas fa-flag text-danger fa-lg"></i>
+              </div>
+              <h6 class="fw-bold text-navy mb-1">Safety Reports</h6>
+              <p class="text-muted small mb-3">Triage consumer incident reports on counterfeit or expired drugs.</p>
+            </div>
+            <a href="admin-reports.html" class="btn btn-outline-danger btn-sm w-100 fw-bold">
+              Open Reports &rarr;
+            </a>
+          </div>
+        </div>
+
+        <div class="col-md-3 col-sm-6">
+          <div class="card-custom p-3 bg-white shadow-sm h-100 d-flex flex-column justify-content-between">
+            <div>
+              <div class="d-flex align-items-center justify-content-between mb-2">
+                <span class="badge bg-info bg-opacity-10 text-info fw-bold">Audit</span>
+                <i class="fas fa-clipboard-list text-info fa-lg"></i>
+              </div>
+              <h6 class="fw-bold text-navy mb-1">Security Audit Trail</h6>
+              <p class="text-muted small mb-3">Live immutable logging of queries, logins, sales, and modifications.</p>
+            </div>
+            <a href="admin-logs.html" class="btn btn-outline-info btn-sm w-100 fw-bold">
+              Open Audit Logs &rarr;
+            </a>
+          </div>
         </div>
       </div>
 
-      <!-- Section: Suspicious Medicine Reports -->
-      <div class="card-custom p-4 bg-white mb-5">
-        <div class="d-flex justify-content-between align-items-center mb-3">
-          <div>
-            <h5 class="fw-bold text-navy mb-0"><i class="fas fa-exclamation-triangle text-danger me-2"></i>Suspicious Medicine Community Reports</h5>
-            <small class="text-muted">Investigate consumer reports and adjust status to alert pharmacies.</small>
+      <!-- Compact Live Activity Snapshot (Pending Approvals & Reports side-by-side) -->
+      <div class="row g-4 mb-4">
+        <!-- Pending Approvals Preview -->
+        <div class="col-lg-6">
+          <div class="card-custom p-4 bg-white shadow-sm h-100">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+              <div>
+                <h6 class="fw-bold text-navy mb-0">
+                  <i class="fas fa-user-check text-success me-2"></i>Pending Pharmacy Approvals
+                </h6>
+                <small class="text-muted">Applications awaiting DGDA license review</small>
+              </div>
+              <a href="admin-approvals.html" class="btn btn-outline-success btn-sm py-0 px-2">
+                Full Queue &rarr;
+              </a>
+            </div>
+            <div id="dashboardPendingList">
+              <div class="text-center py-4 text-muted small"><div class="spinner-border spinner-border-sm text-success me-2"></div>Checking pending queue...</div>
+            </div>
           </div>
-          <button class="btn btn-outline-secondary btn-sm" onclick="loadAdminReports()">
-            <i class="fas fa-sync-alt me-1"></i> Refresh
-          </button>
         </div>
 
-        <div class="table-responsive">
-          <table class="table table-custom align-middle mb-0">
-            <thead>
-              <tr>
-                <th>Report ID</th>
-                <th>Medicine & Batch</th>
-                <th>Issue Category</th>
-                <th>Incident Details</th>
-                <th>Review Status</th>
-                <th class="text-end">Action</th>
-              </tr>
-            </thead>
-            <tbody id="adminReportsTable">
-              <tr><td colspan="6" class="text-center py-3 text-muted">Loading reports...</td></tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-
-      <!-- Section: Medicine Registry Management -->
-      <div class="card-custom p-4 bg-white mb-5">
-        <div class="d-flex justify-content-between align-items-center mb-3">
-          <div>
-            <h5 class="fw-bold text-navy mb-0"><i class="fas fa-database text-primary me-2"></i>Official Medicine Reference Registry</h5>
-            <small class="text-muted">Manage DAR registration codes, reference pricing, and manufacturers.</small>
+        <!-- Recent Reports Preview -->
+        <div class="col-lg-6">
+          <div class="card-custom p-4 bg-white shadow-sm h-100">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+              <div>
+                <h6 class="fw-bold text-navy mb-0">
+                  <i class="fas fa-exclamation-triangle text-danger me-2"></i>Recent Community Reports
+                </h6>
+                <small class="text-muted">Consumer alerts on suspicious or counterfeit drugs</small>
+              </div>
+              <a href="admin-reports.html" class="btn btn-outline-danger btn-sm py-0 px-2">
+                Full Board &rarr;
+              </a>
+            </div>
+            <div id="dashboardReportsList">
+              <div class="text-center py-4 text-muted small"><div class="spinner-border spinner-border-sm text-danger me-2"></div>Loading reports...</div>
+            </div>
           </div>
-          <button class="btn btn-primary-custom btn-sm" data-bs-toggle="modal" data-bs-target="#addMedicineModal">
-            <i class="fas fa-plus me-1"></i> Add Medicine
-          </button>
-        </div>
-
-        <div class="table-responsive">
-          <table class="table table-custom align-middle mb-0">
-            <thead>
-              <tr>
-                <th>Medicine Name</th>
-                <th>Generic Name</th>
-                <th>Manufacturer</th>
-                <th>DAR Reg No</th>
-                <th>Ref Price</th>
-                <th>Status</th>
-                <th class="text-end">Action</th>
-              </tr>
-            </thead>
-            <tbody id="adminMedicinesTable">
-              <tr><td colspan="7" class="text-center py-3 text-muted">Loading medicines...</td></tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-
-      <!-- Section: Security & Access Audit Logs -->
-      <div class="card-custom p-4 bg-white">
-        <div class="d-flex justify-content-between align-items-center mb-3">
-          <div>
-            <h5 class="fw-bold text-navy mb-0"><i class="fas fa-shield-virus text-info me-2"></i>Live Medical Security & Access Logs</h5>
-            <small class="text-muted">Real-time audit trail of medicine searches, verifications, sales, and administrative modifications.</small>
-          </div>
-          <button class="btn btn-outline-secondary btn-sm" onclick="loadAccessLogs()">
-            <i class="fas fa-sync-alt me-1"></i> Refresh Logs
-          </button>
-        </div>
-
-        <div class="table-responsive">
-          <table class="table table-custom table-sm align-middle mb-0 font-monospace" style="font-size: 0.84rem;">
-            <thead>
-              <tr>
-                <th>Time</th>
-                <th>Action</th>
-                <th>User / Role</th>
-                <th>Resource</th>
-                <th>Audit Details</th>
-                <th>IP Address</th>
-              </tr>
-            </thead>
-            <tbody id="accessLogsTable">
-              <tr><td colspan="6" class="text-center py-3 text-muted">Streaming access logs...</td></tr>
-            </tbody>
-          </table>
         </div>
       </div>
     </div>
@@ -232,20 +230,22 @@
   <div class="modal fade" id="addMedicineModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg">
       <div class="modal-content border-0 shadow-lg">
-        <div class="modal-header bg-primary text-white">
-          <h5 class="modal-title fw-bold"><i class="fas fa-pills me-2"></i>Register Medicine in Central Database</h5>
-          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+        <div class="modal-header bg-navy text-white">
+          <h5 class="modal-title fw-bold"><i class="fas fa-plus-circle me-2"></i>Register New Medicine (DGDA Entry)</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close">
+            <i class="fas fa-times"></i>
+          </button>
         </div>
         <form id="adminAddMedicineForm" onsubmit="handleAdminAddMedicine(event)">
           <div class="modal-body">
             <div class="row g-3 mb-3">
               <div class="col-md-6">
                 <label class="form-label fw-bold text-navy small">Brand Name *</label>
-                <input type="text" id="adminMedName" class="form-control" placeholder="e.g. Napa 500 mg" required>
+                <input type="text" id="adminMedName" class="form-control" placeholder="e.g. Napa Extra" required>
               </div>
               <div class="col-md-6">
-                <label class="form-label fw-bold text-navy small">Generic Composition *</label>
-                <input type="text" id="adminMedGeneric" class="form-control" placeholder="e.g. Paracetamol" required>
+                <label class="form-label fw-bold text-navy small">Generic Name *</label>
+                <input type="text" id="adminMedGeneric" class="form-control" placeholder="e.g. Paracetamol + Caffeine" required>
               </div>
             </div>
 
@@ -256,39 +256,43 @@
               </div>
               <div class="col-md-6">
                 <label class="form-label fw-bold text-navy small">Strength *</label>
-                <input type="text" id="adminMedStrength" class="form-control" placeholder="e.g. 500 mg" required>
+                <input type="text" id="adminMedStrength" class="form-control" placeholder="e.g. 500mg + 65mg" required>
               </div>
             </div>
 
             <div class="row g-3 mb-3">
               <div class="col-md-4">
-                <label class="form-label fw-bold text-navy small">Dosage Form</label>
-                <select id="adminMedDosageForm" class="form-select">
+                <label class="form-label fw-bold text-navy small">Dosage Form *</label>
+                <select id="adminMedDosageForm" class="form-select" required>
                   <option value="Tablet">Tablet</option>
                   <option value="Capsule">Capsule</option>
                   <option value="Syrup">Syrup</option>
                   <option value="Suspension">Suspension</option>
                   <option value="Injection">Injection</option>
+                  <option value="Eye Drops">Eye Drops</option>
+                  <option value="Ointment">Ointment</option>
+                  <option value="Inhaler">Inhaler</option>
                 </select>
               </div>
               <div class="col-md-4">
-                <label class="form-label fw-bold text-navy small">Therapeutic Category *</label>
-                <input type="text" id="adminMedCategory" class="form-control" placeholder="e.g. Analgesics" required>
+                <label class="form-label fw-bold text-navy small">Category / Class</label>
+                <input type="text" id="adminMedCategory" class="form-control" placeholder="e.g. Analgesic">
               </div>
               <div class="col-md-4">
-                <label class="form-label fw-bold text-navy small">Reference Price (৳) *</label>
-                <input type="number" step="0.01" id="adminMedPrice" class="form-control" placeholder="1.20" required>
+                <label class="form-label fw-bold text-navy small">Reference Max Retail Price (৳) *</label>
+                <input type="number" step="0.01" id="adminMedPrice" class="form-control" placeholder="2.50" required>
               </div>
             </div>
 
             <div class="mb-3">
-              <label class="form-label fw-bold text-navy small">DGDA DAR Registration Number *</label>
-              <input type="text" id="adminMedRegNo" class="form-control font-monospace" placeholder="e.g. DAR-012-0045" required>
+              <label class="form-label fw-bold text-navy small">DAR Registration Number *</label>
+              <input type="text" id="adminMedRegNo" class="form-control font-monospace" placeholder="e.g. DAR-025-0142-08" required>
+              <div class="form-text small">Standard Drug Administration Registration number stamped on official blister packaging.</div>
             </div>
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-light btn-sm" data-bs-dismiss="modal">Cancel</button>
-            <button type="submit" class="btn btn-primary-custom btn-sm">Add to Database</button>
+            <button type="submit" class="btn btn-primary-custom btn-sm">Save to Medicine Registry</button>
           </div>
         </form>
       </div>
