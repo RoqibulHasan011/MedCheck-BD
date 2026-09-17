@@ -59,8 +59,8 @@ app.use((err, req, res, next) => {
 
 const PORT = process.env.PORT || 5000;
 
-// Connect to Database and start server
-connectDB().then(async () => {
+async function startServer() {
+  await connectDB();
   try {
     // Check if database is empty and automatically seed
     const count = await Medicine.countDocuments();
@@ -81,4 +81,10 @@ connectDB().then(async () => {
   } catch (err) {
     console.error('[Server Startup Error]', err);
   }
-});
+}
+
+if (process.env.VERCEL !== '1') {
+  startServer();
+}
+
+module.exports = app;
